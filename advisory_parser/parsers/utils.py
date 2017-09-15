@@ -19,12 +19,12 @@ def get_request(url):
         res = urlopen(url)
     except HTTPError as e:
         error_msg = 'Failed to GET with status code: {}'.format(e.code)
-        raise AdvisoryParserGetContentException(error_msg) from None
+        raise AdvisoryParserGetContentException(error_msg)
     except URLError as e:
         error_msg = 'Failed to establish connection: {}'.format(e.reason)
-        raise AdvisoryParserGetContentException(error_msg) from None
+        raise AdvisoryParserGetContentException(error_msg)
     except ValueError:
-        raise AdvisoryParserGetContentException('Invalid URL specified.') from None
+        raise AdvisoryParserGetContentException('Invalid URL specified.')
     else:
         return res.read()
 
