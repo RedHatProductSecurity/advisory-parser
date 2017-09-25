@@ -20,11 +20,11 @@ The need for parsing raw security advisories in this way could be avoided
 if vendors provided their security pages in a machine readable (and
 preferably standardized) format. An example of this would be Red Hat's
 security advisories that can be pulled in from a separate Security Data API
-(`example <https://access.redhat.com/labs/securitydataapi/cvrf/RHSA-2016:1883.json>`_)
+(`RHSA-2016:1883.json <https://access.redhat.com/labs/securitydataapi/cvrf/RHSA-2016:1883.json>`_)
 or downloaded as an XML file
-(`example <https://www.redhat.com/security/data/cvrf/2016/cvrf-rhsa-2016-1883.xml>`_),
+(`cvrf-rhsa-2016-1883.xml <https://www.redhat.com/security/data/cvrf/2016/cvrf-rhsa-2016-1883.xml>`_),
 or OpenSSL's list of issues available in XML
-(`link <https://www.openssl.org/news/vulnerabilities.xml>`_).
+(`vulnerabilities.xml <https://www.openssl.org/news/vulnerabilities.xml>`_).
 
 If you are a vendor or an upstream project owner interested in providing
 your security advisories in a machine readable format and don't know where
