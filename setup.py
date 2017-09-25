@@ -11,7 +11,7 @@ with open('README.rst', 'r') as f:
 
 setup(
     name='advisory-parser',
-    version='1.0',
+    version='1.1',
     description='Security flaw parser for upstream security advisories',
     long_description=description,
     url='https://github.com/mprpic/advisory-parser',
@@ -31,5 +31,5 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
     keywords='security advisory parser scraper',
-    packages=['advisory_parser'],
+    packages=['advisory_parser', 'advisory_parser.parsers'],
 )
