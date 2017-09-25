@@ -19,6 +19,8 @@ class Parser:
         :param url: URL to parse
         :return: List of Flaw objects
         """
+        if not url:
+            raise AdvisoryParserUrlException('No URL specified')
 
         if 'chromereleases' in url:
             return parse_chrome_advisory(url)
