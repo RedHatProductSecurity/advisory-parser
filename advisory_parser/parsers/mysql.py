@@ -62,6 +62,7 @@ def parse_mysql_advisory(url):
 
     month, year = date_match.groups()
     cpu_date = _nearest_tuesday(int(year), month)
+    advisory_id = 'CPU {} {}'.format(month.capitalize(), year)
 
     flaws, warnings = [], []
     for row in table_rows:
@@ -118,8 +119,7 @@ def parse_mysql_advisory(url):
 
         component = re.search(r'subcomponent: ([^\)]*)\)', description).group(1)
 
-        summary = ('mysql: {} unspecified vulnerability (CPU {} {})'
-                   .format(component, month.capitalize(), year))
+        summary = ('mysql: {} unspecified vulnerability ({})'.format(component, advisory_id))
 
         # Flaw descriptions contain vulnerable versions. Fixed versions are usually
         # one version higher.
@@ -138,6 +138,7 @@ def parse_mysql_advisory(url):
             description=description,
             fixed_in=fixed_in,
             from_url=advisory_url,
+            advisory_id=advisory_id,
         ))
 
     return flaws, warnings

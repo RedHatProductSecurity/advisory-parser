@@ -17,7 +17,8 @@ class Flaw:
     """Object that represents a scraped security flaw with all its metadata"""
 
     def __init__(self, from_url=None, cves=[], summary=None, public_date=None, cvss3=None,
-                 cvss2=None, impact='unspecified', description=None, fixed_in=[]):
+                 cvss2=None, impact='unspecified', description=None, fixed_in=[], advisory_id=None):
+
         # List of CVEs relating to a single security flaw.
         self.cves = cves
 
@@ -42,6 +43,9 @@ class Flaw:
 
         # The URL from which the security flaw was parsed.
         self.from_url = from_url
+
+        # The ID of the scraped advisory, if one exists (e.g. APSB17-28 for Flash)
+        self.advisory_id = advisory_id
 
     # Sort highest impact to lowest impact
     def __lt__(self, other):

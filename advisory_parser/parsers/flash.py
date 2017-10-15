@@ -73,6 +73,7 @@ def parse_flash_advisory(url):
             summary='flash-plugin: {} vulnerability ({})'.format(vuln_impact, advisory_id),
             impact=impact_rating, description=description,
             cvss3=CVSS_MAP.get(vuln_impact, '8.8/CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H'),
+            advisory_id=advisory_id
         ))
 
     return flaws, warnings

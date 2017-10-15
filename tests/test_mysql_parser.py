@@ -59,4 +59,5 @@ def test_parser(get_request, input_file, url):
                               'fixed_in': ['5.7.19'],
                               'from_url': 'http://www.oracle.com/technetwork/security-advisory/cpujul2017-3236622.html',
                               'impact': 'moderate', 'public_date': date(2017, 7, 18),
-                              'summary': 'mysql: Server: UDF unspecified vulnerability (CPU Jul 2017)'}
+                              'summary': 'mysql: Server: UDF unspecified vulnerability (CPU Jul 2017)',
+                              'advisory_id': 'CPU Jul 2017'}
