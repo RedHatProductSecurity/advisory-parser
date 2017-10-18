@@ -10,11 +10,11 @@ from setuptools import setup
 with open('README.rst', 'r') as f:
     description = f.read()
 
-requires = ['beautifulsoup4>=4.6.0']
+requires = ['beautifulsoup4>=4.0.0']
 
 setup(
     name='advisory-parser',
-    version='1.3',
+    version='1.4',
     description='Security flaw parser for upstream security advisories',
     long_description=description,
     url='https://github.com/mprpic/advisory-parser',
