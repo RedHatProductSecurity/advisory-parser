@@ -1,5 +1,5 @@
 import pytest
-from datetime import date
+from datetime import datetime
 from os import path
 try:
     from unittest.mock import patch
@@ -10,16 +10,16 @@ from advisory_parser.parsers.mysql import parse_mysql_advisory, _nearest_tuesday
 
 
 @pytest.mark.parametrize('year, month, day, expected_date', [
-    (2017, 'jul', 3, date(2017, 7, 4)),
-    (2017, 'jul', 4, date(2017, 7, 4)),  # Tuesday
-    (2017, 'jul', 5, date(2017, 7, 4)),
-    (2017, 'jul', 6, date(2017, 7, 4)),
-    (2017, 'jul', 7, date(2017, 7, 4)),
-    (2017, 'jul', 8, date(2017, 7, 11)),
-    (2017, 'jul', 9, date(2017, 7, 11)),
-    (2017, 'jul', 10, date(2017, 7, 11)),
-    (2017, 'jul', 11, date(2017, 7, 11)),  # Tuesday
-    (2017, 'jul', 12, date(2017, 7, 11)),
+    (2017, 'jul', 3, datetime(2017, 7, 4)),
+    (2017, 'jul', 4, datetime(2017, 7, 4)),  # Tuesday
+    (2017, 'jul', 5, datetime(2017, 7, 4)),
+    (2017, 'jul', 6, datetime(2017, 7, 4)),
+    (2017, 'jul', 7, datetime(2017, 7, 4)),
+    (2017, 'jul', 8, datetime(2017, 7, 11)),
+    (2017, 'jul', 9, datetime(2017, 7, 11)),
+    (2017, 'jul', 10, datetime(2017, 7, 11)),
+    (2017, 'jul', 11, datetime(2017, 7, 11)),  # Tuesday
+    (2017, 'jul', 12, datetime(2017, 7, 11)),
 ])
 def test_nearest_tuesday(year, month, day, expected_date):
     assert expected_date == _nearest_tuesday(year, month, day)
@@ -58,6 +58,6 @@ def test_parser(get_request, input_file, url):
                                              'repeatable crash (complete DOS) of MySQL Server.',
                               'fixed_in': ['5.7.19'],
                               'from_url': 'http://www.oracle.com/technetwork/security-advisory/cpujul2017-3236622.html',
-                              'impact': 'moderate', 'public_date': date(2017, 7, 18),
+                              'impact': 'moderate', 'public_date': datetime(2017, 7, 18),
                               'summary': 'mysql: Server: UDF unspecified vulnerability (CPU Jul 2017)',
                               'advisory_id': 'CPU Jul 2017'}

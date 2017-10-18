@@ -5,7 +5,7 @@
 # License: LGPLv3+
 
 import re
-from datetime import date, timedelta
+from datetime import datetime, timedelta
 import bs4
 
 from .utils import get_request
@@ -30,7 +30,7 @@ def _nearest_tuesday(year, month, day=17):
     if month.lower() not in month_to_num:
         raise AdvisoryParserTextException('Invalid month parsed from advisory URL:', str(month))
 
-    base_date = date(year, month_to_num[month.lower()], day)
+    base_date = datetime(year, month_to_num[month.lower()], day)
 
     previous_tuesday = base_date - timedelta(days=((base_date.weekday() + 6) % 7))
     next_tuesday = base_date + timedelta(days=((1 - base_date.weekday()) % 7))

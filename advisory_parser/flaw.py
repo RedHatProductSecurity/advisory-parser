@@ -25,7 +25,7 @@ class Flaw:
         # A summary that shortly describes the security flaw.
         self.summary = summary
 
-        # A datetime.date object of when the security flaw was made public.
+        # A datetime.datetime object of when the security flaw was made public.
         self.public_date = public_date
 
         # CVSS scores
