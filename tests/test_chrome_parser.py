@@ -1,6 +1,7 @@
 import pytest
 import datetime
 from os import path
+from io import open
 try:
     from unittest.mock import patch
 except ImportError:
@@ -11,12 +12,12 @@ from advisory_parser.parsers.chrome import parse_chrome_advisory
 
 @patch('advisory_parser.parsers.chrome.get_text_from_url')
 @pytest.mark.parametrize('input_file, url', [
-    ('chrome_2017-06-15.html', 'https://chromereleases.googleblog.com/2017/06/stable-channel-update-for-desktop_15.html')
+    ('chrome_2017-06-15.txt', 'https://chromereleases.googleblog.com/2017/06/stable-channel-update-for-desktop_15.html')
 ])
 def test_parser(get_text_from_url, input_file, url):
 
     file_dir = path.abspath(path.dirname(__file__))
-    with open(path.join(file_dir, 'test_data', input_file), 'r') as f:
+    with open(path.join(file_dir, 'test_data', input_file), 'r', encoding='utf-8') as f:
         testing_text = f.read()
 
     get_text_from_url.return_value = testing_text
