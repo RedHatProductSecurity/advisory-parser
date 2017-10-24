@@ -6,8 +6,16 @@
 %global with_python3 0
 %endif
 
+# When building an RPM for RHEL (using a CentOS image), the dist tag
+# default is 'el7.centos'. Override this to just 'el7' by looking at the
+# %{rhel} macro (that is also defined on CentOS). It contains the major
+# release version so append it to '.el'.
+%if 0%{?rhel}
+%define dist .el%{rhel}
+%endif
+
 Name:           python-%{pyname}
-Version:        1.3
+Version:        1.4
 Release:        1%{?dist}
 Summary:        %{summary}
 
@@ -101,6 +109,6 @@ description, and others.
 %endif
 
 %changelog
-* Thu Oct 12 2017 Viliam Krizan <vkrizan AT redhat.com> 1.3-1
+* Thu Oct 24 2017 Viliam Krizan <vkrizan AT redhat.com> 1.4-1
 - initial packaging
 

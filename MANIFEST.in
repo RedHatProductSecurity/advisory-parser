@@ -2,4 +2,4 @@ include setup.py
 include *.txt *.rst *.ini
 include COPYRIGHT
 include LICENSE
-recursive-include tests *.py *.html
+recursive-include tests *.py *.html *.txt

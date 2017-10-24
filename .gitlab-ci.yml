@@ -1,0 +1,111 @@
+stages:
+  - test
+  - build_sdist
+  - build_rpm
+
+
+before_script:
+  - export LANG=en_US.UTF-8
+
+
+test:
+  image: fedora:26
+  stage: test
+
+  before_script:
+    - dnf -y update 'python*'
+    - dnf -y install python34 python35 python2 git
+    - dnf install --setopt install_weak_deps=false -y rpmlint
+
+  script:
+    - rpmlint python-advisory-parser.spec
+    - python3 -m venv venv
+    - source venv/bin/activate
+    - pip install -r devel-requirements.txt
+    - pip install -e ./
+    - python3 -m tox
+
+
+build_sdist:
+  # Build source archive for all tags X.Y*
+  image: fedora:latest
+  stage: build_sdist
+
+  only:
+    - /\d+\.\d+.*/
+  except:
+    - branches
+
+  script:
+    - "[[ $(python3 setup.py -V) == \"$CI_BUILD_TAG\" ]]"
+    - python3 setup.py clean sdist
+
+  artifacts:
+    paths:
+      - dist/
+
+
+rpm:fedora-latest:
+  # Build latest Fedora RPM
+  image: fedora:latest
+  stage: build_rpm
+
+  only:
+    - /\d+\.\d+.*/
+  except:
+    - branches
+
+  dependencies:
+    - build_sdist
+
+  script:
+    - bash -e build_rpm.sh "fedora" "python-advisory-parser.spec"
+
+  artifacts:
+    paths:
+      - SRPMS/
+      - RPMS/
+
+
+rpm:fedora-secondary:
+  # Build RPM for Fedora release before latest
+  image: fedora:25
+  stage: build_rpm
+
+  only:
+    - /\d+\.\d+.*/
+  except:
+    - branches
+
+  dependencies:
+    - build_sdist
+
+  script:
+    - bash -e build_rpm.sh "fedora" "python-advisory-parser.spec"
+
+  artifacts:
+    paths:
+      - SRPMS/
+      - RPMS/
+
+
+rpm:el7:
+  # Build RPM for Enterprise Linux 7 (CentOS 7, RHEL 7)
+  image: centos:7
+  stage: build_rpm
+
+  only:
+    - /\d+\.\d+.*/
+  except:
+    - branches
+
+  dependencies:
+    - build_sdist
+
+  script:
+    - bash -e build_rpm.sh "el7" "python-advisory-parser.spec"
+
+  artifacts:
+    paths:
+      - SRPMS/
+      - RPMS/

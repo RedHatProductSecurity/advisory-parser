@@ -1,6 +1,7 @@
 import pytest
 import datetime
 from os import path
+from io import open
 try:
     from unittest.mock import patch
 except ImportError:
@@ -16,7 +17,7 @@ from advisory_parser.parsers.flash import parse_flash_advisory
 def test_parser(get_request, input_file, url):
 
     file_dir = path.abspath(path.dirname(__file__))
-    with open(path.join(file_dir, 'test_data', input_file), 'r') as f:
+    with open(path.join(file_dir, 'test_data', input_file), 'r', encoding='utf-8') as f:
         testing_html = f.read()
 
     get_request.return_value = testing_html
