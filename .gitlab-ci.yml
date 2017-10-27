@@ -12,12 +12,10 @@ test:
   image: fedora:26
   stage: test
 
-  before_script:
+  script:
     - dnf -y update 'python*'
     - dnf -y install python34 python35 python2 git
     - dnf install --setopt install_weak_deps=false -y rpmlint
-
-  script:
     - rpmlint python-advisory-parser.spec
     - python3 -m venv venv
     - source venv/bin/activate
