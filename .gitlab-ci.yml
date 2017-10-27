@@ -21,8 +21,7 @@ test:
     - rpmlint python-advisory-parser.spec
     - python3 -m venv venv
     - source venv/bin/activate
-    - pip install -r devel-requirements.txt
-    - pip install -e ./
+    - pip install tox
     - python3 -m tox
 
 
