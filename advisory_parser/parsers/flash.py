@@ -69,7 +69,7 @@ def parse_flash_advisory(url):
         )
 
         flaws.append(Flaw(
-            from_url=url, public_date=public_date, cves=cves, fixed_in=fixed_in,
+            from_url=url, public_date=public_date, cves=cves, fixed_in={'flash-plugin': fixed_in},
             summary='flash-plugin: {} vulnerability ({})'.format(vuln_impact, advisory_id),
             impact=impact_rating, description=description,
             cvss3=CVSS_MAP.get(vuln_impact, '8.8/CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H'),

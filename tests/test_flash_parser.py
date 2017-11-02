@@ -34,7 +34,7 @@ def test_parser(get_request, input_file, url):
                                              'describes multiple use after free\n flaws that can possibly '
                                              'lead to remote code execution when Flash Player is used to '
                                              'play a specially crafted SWF file.',
-                              'cvss2': None, 'fixed_in': ['26.0.0.126'], 'advisory_id': 'APSB17-17'}
+                              'cvss2': None, 'fixed_in': {'flash-plugin': ['26.0.0.126']}, 'advisory_id': 'APSB17-17'}
     assert vars(flaws[1]) == {'from_url': 'https://helpx.adobe.com/security/products/flash-player/apsb17-17.html',
                               'cves': ['CVE-2017-3076,', 'CVE-2017-3077,', 'CVE-2017-3078,', 'CVE-2017-3079,', 'CVE-2017-3082'],
                               'impact': 'critical', 'summary': 'flash-plugin: remote code execution vulnerability (APSB17-17)',
@@ -44,4 +44,4 @@ def test_parser(get_request, input_file, url):
                                              'describes multiple memory corruption flaws that can possibly '
                                              'lead to remote code execution when Flash Player is used to '
                                              'play a specially crafted SWF file.',
-                              'cvss2': None, 'fixed_in': ['26.0.0.126'], 'advisory_id': 'APSB17-17'}
+                              'cvss2': None, 'fixed_in': {'flash-plugin': ['26.0.0.126']}, 'advisory_id': 'APSB17-17'}

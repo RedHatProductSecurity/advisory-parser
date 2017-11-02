@@ -110,6 +110,7 @@ def parse_chrome_advisory(url):
         cvss3 = CVSS3_MAP[impact]
 
         flaws.append(Flaw(from_url=com_url, cves=cves, summary=summary, public_date=public_date,
-                          cvss3=cvss3, impact=impact, fixed_in=[fixed_in], description=description))
+                          cvss3=cvss3, impact=impact, fixed_in={'chromium-browser': [fixed_in]},
+                          description=description))
 
     return flaws, warnings

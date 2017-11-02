@@ -57,7 +57,7 @@ def test_parser(get_request, input_file, url):
                                              'Successful attacks of this vulnerability can result in '
                                              'unauthorized ability to cause a hang or frequently '
                                              'repeatable crash (complete DOS) of MySQL Server.',
-                              'fixed_in': ['5.7.19'],
+                              'fixed_in': {'mysql': ['5.7.19']},
                               'from_url': 'http://www.oracle.com/technetwork/security-advisory/cpujul2017-3236622.html',
                               'impact': 'moderate', 'public_date': datetime(2017, 7, 18),
                               'summary': 'mysql: Server: UDF unspecified vulnerability (CPU Jul 2017)',

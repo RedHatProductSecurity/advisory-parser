@@ -16,11 +16,11 @@ IMPACT_WEIGHT = {
 class Flaw:
     """Object that represents a scraped security flaw with all its metadata"""
 
-    def __init__(self, from_url=None, cves=[], summary=None, public_date=None, cvss3=None,
-                 cvss2=None, impact='unspecified', description=None, fixed_in=[], advisory_id=None):
+    def __init__(self, from_url=None, cves=None, summary=None, public_date=None, cvss3=None,
+                 cvss2=None, impact='unspecified', description=None, fixed_in=None, advisory_id=None):
 
         # List of CVEs relating to a single security flaw.
-        self.cves = cves
+        self.cves = cves or []
 
         # A summary that shortly describes the security flaw.
         self.summary = summary
@@ -38,8 +38,8 @@ class Flaw:
         # A longer description of the security flaw that may include links to other resources.
         self.description = description
 
-        # List of versions of the affected component in which the security flaw was fixed.
-        self.fixed_in = fixed_in
+        # Dictionary of components and their versions in which the security flaw was fixed.
+        self.fixed_in = fixed_in or {}
 
         # The URL from which the security flaw was parsed.
         self.from_url = from_url

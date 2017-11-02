@@ -8,9 +8,12 @@ import re
 from datetime import datetime, timedelta
 import bs4
 
-from .utils import get_request
+from .utils import get_request, get_text_from_url, CVE_REGEX
 from advisory_parser.flaw import Flaw
 from advisory_parser.exceptions import AdvisoryParserTextException
+
+MARIADB_VULN_PAGE = 'https://mariadb.com/kb/en/library/security/'
+VERSION_REGEX = re.compile(r'(\d\d?\.\d\.\d\d?)')
 
 
 def _nearest_tuesday(year, month, day=17):
@@ -36,6 +39,31 @@ def _nearest_tuesday(year, month, day=17):
     next_tuesday = base_date + timedelta(days=((1 - base_date.weekday()) % 7))
 
     return next_tuesday if next_tuesday - base_date < base_date - previous_tuesday else previous_tuesday
+
+
+def create_mariadb_cve_map():
+
+    # Pull plain text of the MariaDB page since the HTML is invalid: it
+    # doesn't define </li> ending tags for list elements. The HTML would
+    # have to be parsed with a more lenient parser (html5lib), which is an
+    # extra dependency.
+    page_text = get_text_from_url(MARIADB_VULN_PAGE)
+
+    match = re.match(r'.+Full List of CVEs fixed in MariaDB\n(.+)\s*CVEs without specific version numbers.*',
+                     page_text, re.DOTALL)
+
+    if not match:
+        raise AdvisoryParserTextException('Could not parse date from CPU URL.')
+
+    cve_map = {}
+    for cve_line in match.group(1).split('\n'):
+        cve = CVE_REGEX.search(cve_line)
+        versions = VERSION_REGEX.findall(cve_line)
+
+        if cve and versions:
+            cve_map[cve.group(0)] = versions
+
+    return cve_map
 
 
 def parse_mysql_advisory(url):
@@ -64,6 +92,8 @@ def parse_mysql_advisory(url):
     cpu_date = _nearest_tuesday(int(year), month)
     advisory_id = 'CPU {} {}'.format(month.capitalize(), year)
 
+    mariadb_cve_map = create_mariadb_cve_map()
+
     flaws, warnings = [], []
     for row in table_rows:
         # First anchor hyperlink contains the CVE
@@ -88,7 +118,7 @@ def parse_mysql_advisory(url):
         # Filter out some whitespace
         description = description.replace('\n', ' ').replace('  ', ' ').strip()
 
-        product = re.search('Vulnerability in the (.+) component', description)
+        product = re.search(r'Vulnerability in the (.+) component', description)
         if not product:
             warnings.append('ERROR: Could not identify product in {}; skipping:\n\n{}\n---'
                             .format(cve, description))
@@ -123,11 +153,17 @@ def parse_mysql_advisory(url):
 
         # Flaw descriptions contain vulnerable versions. Fixed versions are usually
         # one version higher.
-        vulnerable_versions = re.findall('(\d\.\d\.\d\d?)', description)
-        fixed_in = []
+        vulnerable_versions = VERSION_REGEX.findall(description)
+        mysql_fixed_in = []
         for version in vulnerable_versions:
             fixed_version = '{}.{}'.format(version.rsplit('.', 1)[0], int(version.split('.')[-1]) + 1)
-            fixed_in.append(fixed_version)
+            mysql_fixed_in.append(fixed_version)
+
+        fixed_in = {'mysql': mysql_fixed_in}
+
+        mariadb_fixed_in = mariadb_cve_map.get(cve)
+        if mariadb_fixed_in:
+            fixed_in['mariadb'] = mariadb_fixed_in
 
         flaws.append(Flaw(
             cves=[cve],

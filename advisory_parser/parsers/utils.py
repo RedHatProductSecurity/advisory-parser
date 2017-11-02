@@ -4,6 +4,7 @@
 # Author: Martin Prpič,, Red Hat Product Security
 # License: LGPLv3+
 
+import re
 from bs4 import BeautifulSoup
 try:
     from urllib.request import urlopen
@@ -12,6 +13,8 @@ except ImportError:
     from urllib2 import urlopen, HTTPError, URLError
 
 from advisory_parser.exceptions import AdvisoryParserGetContentException
+
+CVE_REGEX = re.compile(r'CVE-\d{4}-\d{4,}')
 
 
 def get_request(url):
