@@ -44,7 +44,7 @@ build_sdist:
 
 rpm:fedora-latest:
   # Build latest Fedora RPM
-  image: fedora:latest
+  image: fedora:27
   stage: build_rpm
 
   only:
@@ -63,8 +63,23 @@ rpm:fedora-latest:
       - SRPMS/
       - RPMS/
 
-
 rpm:fedora-secondary:
+  # Build latest Fedora RPM
+  image: fedora:26
+  stage: build_rpm
+
+  dependencies:
+    - build_sdist
+
+  script:
+    - bash -e build_rpm.sh "fedora" "python-advisory-parser.spec"
+
+  artifacts:
+    paths:
+      - SRPMS/
+      - RPMS/
+
+rpm:fedora-tertiary:
   # Build RPM for Fedora release before latest
   image: fedora:25
   stage: build_rpm
