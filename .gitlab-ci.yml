@@ -25,7 +25,7 @@ test:
 
 build_sdist:
   # Build source archive for all tags X.Y*
-  image: fedora:latest
+  image: registry.fedoraproject.org/fedora:27
   stage: build_sdist
 
   only:
@@ -63,10 +63,16 @@ rpm:fedora-latest:
       - SRPMS/
       - RPMS/
 
+
 rpm:fedora-secondary:
   # Build latest Fedora RPM
   image: registry.fedoraproject.org/fedora:26
   stage: build_rpm
+
+  only:
+    - /\d+\.\d+.*/
+  except:
+    - branches
 
   dependencies:
     - build_sdist
@@ -78,6 +84,7 @@ rpm:fedora-secondary:
     paths:
       - SRPMS/
       - RPMS/
+
 
 rpm:fedora-tertiary:
   # Build RPM for Fedora release before latest
