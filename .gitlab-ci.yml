@@ -34,7 +34,7 @@ build_sdist:
     - branches
 
   script:
-    - "[[ $(python3 setup.py -V) == \"v$CI_COMMIT_TAG\" ]]"
+    - "[[ \"v$(python3 setup.py -V)\" == \"$CI_COMMIT_TAG\" ]]"
     - python3 setup.py clean sdist
 
   artifacts:
