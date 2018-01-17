@@ -5,6 +5,7 @@
 # License: LGPLv3+
 
 from datetime import datetime
+from itertools import groupby
 from bs4 import BeautifulSoup
 
 from .utils import get_request
@@ -12,13 +13,17 @@ from advisory_parser.flaw import Flaw
 from advisory_parser.exceptions import AdvisoryParserTextException
 
 DESCRIPTION_TEMPLATE = (u'Adobe Security Bulletin {advisory_id} for Adobe Flash '
-                        'Player describes {flaws} that can possibly lead to {vuln_impact} '
-                        'when Flash Player is used to play a specially crafted SWF file.')
+                        'Player describes {number_of_flaws} that can possibly lead to {vuln_impact} '
+                        'when Flash Player is used to play a specially crafted SWF file:\n\n'
+                        '{flaw_summaries}')
 CVSS_MAP = {
     'remote code execution': '8.8/CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H',
     'information disclosure': '6.5/CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N',
     'memory address disclosure': '6.5/CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N',
 }
+
+# Ordered severities used by Adobe: https://helpx.adobe.com/security/severity-ratings.html
+SEVERITY_ORDER = ['critical', 'important', 'moderate']
 
 
 def parse_flash_advisory(url):
@@ -54,26 +59,42 @@ def parse_flash_advisory(url):
     vulns_table = soup.find(id='Vulnerabilitydetails').find_next('table')
     table_rows = vulns_table.find_all('tr')
 
-    # Loop over every row (excluding the header) and create a new Flaw
-    flaws, warnings = [], []
+    # Loop over every row (excluding the header) and extract flaw data; group by vuln impact
+    vuln_data = []
     for row in table_rows[1:]:
-        vuln_category, vuln_impact, impact_rating, cves = [elem.get_text() for elem in row.find_all('td')]
-        vuln_category = vuln_category.lower()
-        vuln_impact = vuln_impact.lower()
-        impact_rating = impact_rating.lower()
-        cves = cves.split()
+        vuln_category, vuln_impact, severity, cve = [elem.get_text() for elem in row.find_all('td')]
+        vuln_data.append((vuln_impact, vuln_category, severity, cve.strip()))
+
+    flaws, warnings = [], []
+    for vuln_impact, group_1 in groupby(sorted(vuln_data), lambda x: x[0]):
+        data = list(group_1)  # Need a copy of the generator to loop over multiple times
+        highest_severity = sorted([entry[2].lower() for entry in data],
+                                  key=SEVERITY_ORDER.index)[0]
+        all_cves = [entry[3] for entry in data]
+
+        flaw_summaries = []
+        for vuln_category, group_2 in groupby(sorted(data), lambda x: x[1]):
+            cves = [entry[3] for entry in group_2]
+            flaw_summaries.append('{} -- {}'.format(vuln_category, ', '.join(cves)))
 
         description = DESCRIPTION_TEMPLATE.format(
-            advisory_id=advisory_id, vuln_impact=vuln_impact,
-            flaws='multiple {} flaws'.format(vuln_category) if len(cves) > 1 else 'a {} flaw'.format(vuln_category)
+            advisory_id=advisory_id, vuln_impact=vuln_impact.lower(),
+            number_of_flaws='multiple flaws' if len(flaw_summaries) > 1 else 'a flaw',
+            flaw_summaries='\n'.join(flaw_summaries),
         )
 
+        summary = ('flash-plugin: {} {} ({})'
+                   .format(vuln_impact,
+                           'vulnerability' if len(all_cves) == 1 else 'vulnerabilities',
+                           advisory_id))
+
         flaws.append(Flaw(
-            from_url=url, public_date=public_date, cves=cves, fixed_in={'flash-plugin': fixed_in},
-            summary='flash-plugin: {} vulnerability ({})'.format(vuln_impact, advisory_id),
-            impact=impact_rating, description=description,
-            cvss3=CVSS_MAP.get(vuln_impact, '8.8/CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H'),
-            advisory_id=advisory_id
+            from_url=url, public_date=public_date, cves=list(all_cves),
+            fixed_in={'flash-plugin': fixed_in},
+            summary=summary,
+            impact=highest_severity, description=description,
+            cvss3=CVSS_MAP.get(vuln_impact.lower(), '8.8/CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H'),
+            advisory_id=advisory_id,
         ))
 
     return flaws, warnings
