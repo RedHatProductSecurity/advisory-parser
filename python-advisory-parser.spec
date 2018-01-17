@@ -15,7 +15,7 @@
 %endif
 
 Name:           python-%{pyname}
-Version:        1.5
+Version:        1.6
 Release:        1%{?dist}
 Summary:        %{summary}
 
@@ -109,6 +109,9 @@ description, and others.
 %endif
 
 %changelog
+* Wed Jan 17 2018 Martin Prpic <mprpic AT redhat.com> 1.6-1
+- release of version 1.6
+
 * Fri Nov 3 2017 Martin Prpic <mprpic AT redhat.com> 1.5-1
 - release of version 1.5
 
