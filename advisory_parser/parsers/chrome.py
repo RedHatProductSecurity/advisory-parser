@@ -98,9 +98,9 @@ def parse_chrome_advisory(url):
 
         else:
             description = ('The following flaw was identified in the Chromium browser: {}.'
-                           .format(summary.lower()))
+                           .format(summary))
 
-        summary = 'chromium-browser: ' + summary.lower()
+        summary = 'chromium-browser: ' + summary
 
         description += '\n\nUpstream bug(s):\n'
         for bug in bug_ids:
