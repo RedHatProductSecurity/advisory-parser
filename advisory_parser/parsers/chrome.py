@@ -22,6 +22,10 @@ CVSS3_MAP = {'critical': '9.6/CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H',
 def parse_chrome_advisory(url):
     advisory_text = get_text_from_url(url)
 
+    # Workaround for advisories that do not use <div>s for each CVE entry. E.g.:
+    # https://chromereleases.googleblog.com/2018/04/stable-channel-update-for-desktop.html
+    advisory_text = re.sub(r'(.)\[\$', r'\1\n[$', advisory_text)
+
     if 'Security Fixes' not in advisory_text:
         raise AdvisoryParserTextException('No security fixes found in {}'.format(url))
 
