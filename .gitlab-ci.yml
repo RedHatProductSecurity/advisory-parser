@@ -9,12 +9,12 @@ before_script:
 
 
 test:
-  image: fedora:26
+  image: registry.fedoraproject.org/fedora:28
   stage: test
 
   script:
     - dnf -y update 'python*'
-    - dnf -y install python34 python35 python2 git
+    - dnf -y install python34 python35 python37 python2 git
     - dnf install --setopt install_weak_deps=false -y rpmlint
     - rpmlint python-advisory-parser.spec
     - python3 -m venv venv
@@ -25,16 +25,13 @@ test:
 
 build_sdist:
   # Build source archive for all tags X.Y*
-  image: registry.fedoraproject.org/fedora:27
+  image: registry.fedoraproject.org/fedora:28
   stage: build_sdist
 
-  only:
-    - /\d+\.\d+.*/
-  except:
-    - branches
+  when: manual
+  allow_failure: false  # Do not execute RPM jobs below unless this one is run/succeeds.
 
   script:
-    - "[[ \"v$(python3 setup.py -V)\" == \"$CI_COMMIT_TAG\" ]]"
     - python3 setup.py clean sdist
 
   artifacts:
@@ -44,13 +41,8 @@ build_sdist:
 
 rpm:fedora-latest:
   # Build latest Fedora RPM
-  image: registry.fedoraproject.org/fedora:27
+  image: registry.fedoraproject.org/fedora:28
   stage: build_rpm
-
-  only:
-    - /\d+\.\d+.*/
-  except:
-    - branches
 
   dependencies:
     - build_sdist
@@ -66,35 +58,8 @@ rpm:fedora-latest:
 
 rpm:fedora-secondary:
   # Build latest Fedora RPM
-  image: registry.fedoraproject.org/fedora:26
+  image: registry.fedoraproject.org/fedora:27
   stage: build_rpm
-
-  only:
-    - /\d+\.\d+.*/
-  except:
-    - branches
-
-  dependencies:
-    - build_sdist
-
-  script:
-    - bash -e build_rpm.sh "fedora" "python-advisory-parser.spec"
-
-  artifacts:
-    paths:
-      - SRPMS/
-      - RPMS/
-
-
-rpm:fedora-tertiary:
-  # Build RPM for Fedora release before latest
-  image: registry.fedoraproject.org/fedora:25
-  stage: build_rpm
-
-  only:
-    - /\d+\.\d+.*/
-  except:
-    - branches
 
   dependencies:
     - build_sdist
@@ -112,11 +77,6 @@ rpm:el7:
   # Build RPM for Enterprise Linux 7 (CentOS 7, RHEL 7)
   image: centos:7
   stage: build_rpm
-
-  only:
-    - /\d+\.\d+.*/
-  except:
-    - branches
 
   dependencies:
     - build_sdist
