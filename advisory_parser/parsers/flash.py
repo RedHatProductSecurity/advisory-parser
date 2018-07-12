@@ -62,7 +62,8 @@ def parse_flash_advisory(url):
     # Loop over every row (excluding the header) and extract flaw data; group by vuln impact
     vuln_data = []
     for row in table_rows[1:]:
-        vuln_category, vuln_impact, severity, cve = [elem.get_text().strip() for elem in row.find_all('td')]
+        vuln_category, vuln_impact, severity, cve = [elem.get_text().strip().replace(u'\xa0', u' ')
+                                                     for elem in row.find_all('td')]
         vuln_data.append((vuln_impact, vuln_category, severity, cve))
 
     flaws, warnings = [], []
