@@ -27,38 +27,41 @@ def test_nearest_tuesday(year, month, day, expected_date):
 
 
 @patch('advisory_parser.parsers.mysql.get_request')
+@patch('advisory_parser.parsers.mysql.create_mariadb_cve_map')
 @pytest.mark.parametrize('input_file, url', [
-    ('mysql_cpu-jul-2017.html', 'http://www.oracle.com/technetwork/security-advisory/cpujul2017verbose-3236625.html')
+    ('mysql_cpu-apr-2019.html', 'https://www.oracle.com/technetwork/security-advisory/cpuapr2019verbose-5072824.html')
 ])
-def test_parser(get_request, input_file, url):
+def test_parser(create_mariadb_cve_map, get_request, input_file, url):
 
     file_dir = path.abspath(path.dirname(__file__))
     with open(path.join(file_dir, 'test_data', input_file), 'r', encoding='utf-8') as f:
         testing_html = f.read()
 
     get_request.return_value = testing_html
+    create_mariadb_cve_map.return_value = {}
     flaws, warnings = parse_mysql_advisory(url)
 
-    assert len(warnings) == 6
-    assert 'Skipping CVE-2014-1912' in warnings[0]
-    assert 'Skipping CVE-2016-4436' in warnings[1]
-    assert 'Skipping CVE-2017-3635' in warnings[2]
-    assert 'Skipping CVE-2017-3732' in warnings[3]
-    assert 'Skipping CVE-2017-5647' in warnings[4]
-    assert 'Skipping CVE-2017-5651' in warnings[5]
+    assert len(warnings) == 4
+    assert 'Skipping CVE-2018-0734' in warnings[0]
+    assert 'Skipping CVE-2019-1559' in warnings[1]
+    assert 'Skipping CVE-2019-1559' in warnings[2]
+    assert 'Skipping CVE-2019-2692' in warnings[3]
 
-    assert vars(flaws[0]) == {'cves': ['CVE-2017-3529'],
-                              'cvss2': None, 'cvss3': '5.3/CVSS:3.0/AV:N/AC:H/PR:L/UI:N/S:U/C:N/I:N/A:H',
-                              'description': 'Vulnerability in the MySQL Server component of Oracle MySQL '
-                                             '(subcomponent: Server: UDF). Supported versions that are '
-                                             'affected are 5.7.18 and earlier. Difficult to exploit '
-                                             'vulnerability allows low privileged attacker with network '
+    assert vars(flaws[0]) == {'cves': ['CVE-2018-3123'],
+                              'summary': 'mysql: Server: libmysqld unspecified vulnerability (CPU Apr 2019)',
+                              'public_date': datetime(2019, 4, 16),
+                              'cvss3': '5.9/CVSS:3.0/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N',
+                              'cvss2': None,
+                              'impact': 'moderate',
+                              'description': 'Vulnerability in the MySQL Server component of '
+                                             'Oracle MySQL (subcomponent: Server: libmysqld). '
+                                             'Supported versions that are affected are 5.6.42 and prior, '
+                                             '5.7.24 and prior and 8.0.13 and prior. Difficult to exploit '
+                                             'vulnerability allows unauthenticated attacker with network '
                                              'access via multiple protocols to compromise MySQL Server. '
                                              'Successful attacks of this vulnerability can result in '
-                                             'unauthorized ability to cause a hang or frequently '
-                                             'repeatable crash (complete DOS) of MySQL Server.',
-                              'fixed_in': {'mysql': ['5.7.19']},
-                              'from_url': 'http://www.oracle.com/technetwork/security-advisory/cpujul2017-3236622.html',
-                              'impact': 'moderate', 'public_date': datetime(2017, 7, 18),
-                              'summary': 'mysql: Server: UDF unspecified vulnerability (CPU Jul 2017)',
-                              'advisory_id': 'CPU Jul 2017'}
+                                             'unauthorized access to critical data or complete access to '
+                                             'all MySQL Server accessible data.',
+                              'fixed_in': {'mysql': ['5.6.43', '5.7.25', '8.0.14']},
+                              'from_url': 'http://www.oracle.com/technetwork/security-advisory/cpuapr2019-5072813.html',
+                              'advisory_id': 'CPU Apr 2019'}
