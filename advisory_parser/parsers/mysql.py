@@ -113,7 +113,7 @@ def parse_mysql_advisory(url):
         description = '\n'.join(description)
 
         # Take the text part only, i.e. anything before the CVSS string
-        description, cvss_text = re.split('\n *CVSS v3\.0', description)
+        description, cvss_text = re.split('\n\s*CVSS v3', description)
 
         # Filter out some whitespace
         description = description.replace('\n', ' ').replace('  ', ' ').strip()
