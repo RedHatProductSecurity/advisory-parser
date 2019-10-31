@@ -118,7 +118,7 @@ def parse_mysql_advisory(url):
         # Filter out some whitespace
         description = description.replace('\n', ' ').replace('  ', ' ').strip()
 
-        product = re.search(r'Vulnerability in the (.+) component', description)
+        product = re.search(r'^Vulnerability in the (.+) (component|product) of ', description)
         if not product:
             warnings.append('ERROR: Could not identify product in {}; skipping:\n\n{}\n---'
                             .format(cve, description))
@@ -147,7 +147,7 @@ def parse_mysql_advisory(url):
         else:
             impact = 'critical'
 
-        component = re.search(r'subcomponent: ([^\)]+\)?)\)', description).group(1)
+        component = re.search(r'\((sub)?component: ([^\)]+\)?)\)', description).group(2)
 
         summary = ('mysql: {} unspecified vulnerability ({})'.format(component, advisory_id))
 
