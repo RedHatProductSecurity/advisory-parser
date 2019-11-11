@@ -1,16 +1,12 @@
-# -*- coding: UTF-8 -*-
-#
 # Copyright (c) 2017 Red Hat, Inc.
 # Author: Martin Prpič,, Red Hat Product Security
 # License: LGPLv3+
 
 import re
+from urllib.error import HTTPError, URLError
+from urllib.request import urlopen
+
 from bs4 import BeautifulSoup
-try:
-    from urllib.request import urlopen
-    from urllib.error import HTTPError, URLError
-except ImportError:
-    from urllib2 import urlopen, HTTPError, URLError
 
 from advisory_parser.exceptions import AdvisoryParserGetContentException
 

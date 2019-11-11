@@ -1,15 +1,13 @@
-# -*- coding: UTF-8 -*-
-#
-# Copyright (c) 2017 Red Hat, Inc.
-# Author: Martin Prpič,, Red Hat Product Security
+# Copyright (c) 2019 Red Hat, Inc.
+# Author: Martin Prpič, Red Hat Product Security
 # License: LGPLv3+
 
 import re
 from datetime import datetime
 
-from .utils import get_text_from_url
-from advisory_parser.flaw import Flaw
 from advisory_parser.exceptions import AdvisoryParserTextException
+from advisory_parser.flaw import Flaw
+from .utils import get_text_from_url
 
 # Chromium does not publish CVSS scores with their CVEs so these values are
 # best-effort guesses based on impact.

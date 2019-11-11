@@ -1,16 +1,15 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (c) 2017 Red Hat, Inc.
-# Author: Martin Prpič,, Red Hat Product Security
+# Copyright (c) 2019 Red Hat, Inc.
+# Author: Martin Prpič, Red Hat Product Security
 # License: LGPLv3+
 
 import re
 from datetime import datetime, timedelta
+
 import bs4
 
-from .utils import get_request, get_text_from_url, CVE_REGEX
-from advisory_parser.flaw import Flaw
 from advisory_parser.exceptions import AdvisoryParserTextException
+from advisory_parser.flaw import Flaw
+from .utils import get_request, get_text_from_url, CVE_REGEX
 
 MARIADB_VULN_PAGE = 'https://mariadb.com/kb/en/library/security/'
 VERSION_REGEX = re.compile(r'(\d\d?\.\d\.\d\d?)')

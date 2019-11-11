@@ -1,16 +1,15 @@
-# -*- coding: UTF-8 -*-
-#
-# Copyright (c) 2017 Red Hat, Inc.
-# Author: Martin Prpič,, Red Hat Product Security
+# Copyright (c) 2019 Red Hat, Inc.
+# Author: Martin Prpič, Red Hat Product Security
 # License: LGPLv3+
 
 from datetime import datetime
 from itertools import groupby
+
 from bs4 import BeautifulSoup
 
-from .utils import get_request
-from advisory_parser.flaw import Flaw
 from advisory_parser.exceptions import AdvisoryParserTextException
+from advisory_parser.flaw import Flaw
+from .utils import get_request
 
 DESCRIPTION_TEMPLATE = (u'Adobe Security Bulletin {advisory_id} for Adobe Flash '
                         'Player describes {number_of_flaws} that can possibly lead to {vuln_impact} '
