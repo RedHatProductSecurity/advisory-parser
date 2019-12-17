@@ -40,7 +40,7 @@ build_sdist:
 
 rpm:fedora-latest:
   # Build latest Fedora RPM
-  image: registry.fedoraproject.org/fedora:30
+  image: registry.fedoraproject.org/fedora:31
   stage: build_rpm
 
   dependencies:
@@ -57,7 +57,7 @@ rpm:fedora-latest:
 
 rpm:fedora-secondary:
   # Build secondary Fedora RPM
-  image: registry.fedoraproject.org/fedora:29
+  image: registry.fedoraproject.org/fedora:30
   stage: build_rpm
 
   dependencies:
@@ -82,6 +82,23 @@ rpm:el7:
 
   script:
     - bash -e build_rpm.sh "el7" "python-advisory-parser.spec"
+
+  artifacts:
+    paths:
+      - SRPMS/
+      - RPMS/
+
+
+rpm:el8:
+  # Build RPM for Enterprise Linux 8 (CentOS 8, RHEL 8)
+  image: centos:8
+  stage: build_rpm
+
+  dependencies:
+    - build_sdist
+
+  script:
+    - bash -e build_rpm.sh "el8" "python-advisory-parser.spec"
 
   artifacts:
     paths:

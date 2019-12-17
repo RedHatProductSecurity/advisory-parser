@@ -21,9 +21,11 @@ Source0:        https://files.pythonhosted.org/packages/source/a/%{pyname}/%{pyn
 
 BuildArch:      noarch
 
+%if "%{?rhel}" == "8"
+BuildRequires:  platform-python-devel
+%else
 BuildRequires:  python3-devel
-BuildRequires:  python3-pytest
-BuildRequires:  python3-beautifulsoup4 >= 4.0.0
+%endif
 
 %description
 This library allows you to parse data from security advisories of certain
@@ -34,7 +36,11 @@ description, and others.
 %package -n python3-%{pyname}
 Summary:        %{summary}
 %{?python_provide:%python_provide python3-%{pyname}}
+%if "%{?rhel}" == "7"
+Requires:       python-beautifulsoup4 >= 4.0.0
+%else
 Requires:       python3-beautifulsoup4 >= 4.0.0
+%endif
 
 %description -n python3-%{pyname}
 This library allows you to parse data from security advisories of certain
@@ -52,16 +58,13 @@ description, and others.
 %install
 %py3_install
 
-%check
-%{__python3} -m pytest tests
-
 %files -n python3-%{pyname}
 %license LICENSE
 %doc README.rst COPYRIGHT
 %{python3_sitelib}/*
 
 %changelog
-* Thu Dec 17 2019 Martin Prpic <mprpic AT redhat.com> 1.9-1
+* Tue Dec 17 2019 Martin Prpic <mprpic AT redhat.com> 1.9-1
 - release of version 1.9
 
 * Thu Aug 15 2019 Martin Prpic <mprpic AT redhat.com> 1.8-1
@@ -76,5 +79,5 @@ description, and others.
 * Fri Nov 3 2017 Martin Prpic <mprpic AT redhat.com> 1.5-1
 - release of version 1.5
 
-* Thu Oct 24 2017 Viliam Krizan <vkrizan AT redhat.com> 1.4-1
+* Fri Oct 24 2017 Viliam Krizan <vkrizan AT redhat.com> 1.4-1
 - initial packaging
