@@ -10,7 +10,7 @@
 %endif
 
 Name:           python-%{pyname}
-Version:        1.8
+Version:        1.9
 Release:        1%{?dist}
 Summary:        %{summary}
 
@@ -61,6 +61,9 @@ description, and others.
 %{python3_sitelib}/*
 
 %changelog
+* Thu Dec 17 2019 Martin Prpic <mprpic AT redhat.com> 1.9-1
+- release of version 1.9
+
 * Thu Aug 15 2019 Martin Prpic <mprpic AT redhat.com> 1.8-1
 - release of version 1.8
 

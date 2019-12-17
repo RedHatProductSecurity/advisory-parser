@@ -12,7 +12,7 @@ requires = ['beautifulsoup4>=4.0.0']
 
 setup(
     name='advisory-parser',
-    version='1.8',
+    version='1.9',
     description='Security flaw parser for upstream security advisories',
     long_description=description,
     url='https://github.com/mprpic/advisory-parser',

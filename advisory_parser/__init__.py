@@ -5,4 +5,4 @@
 from .parser import Parser
 
 
-__version__ = '1.8'
+__version__ = '1.9'
