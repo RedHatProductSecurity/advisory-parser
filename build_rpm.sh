@@ -18,28 +18,36 @@ prep_env() {
 }
 
 deps_fedora() {
-    # Install RPM building dependencies; skips Recommends or Supplements
-    # ("weak dep") packages
-    dnf install --setopt install_weak_deps=false -y rpm-build rpmlint dnf-plugins-core findutils
+    # Install RPM building dependencies; skips Recommends or Supplements ("weak dep") packages
+    dnf install --setopt install_weak_deps=false -y rpm-build rpmlint dnf-plugins-core
 
     prep_env
 
-    # Install missing dependencies for building an RPM package; skips
-    # Recommends or Supplements ("weak dep") packages
+    # Install missing dependencies for building an RPM package; skips Recommends or Supplements
+    # ("weak dep") packages
     dnf builddep --setopt install_weak_deps=false -y --spec "$spec_file"
 }
 
 deps_el7() {
-    # Install EPEL (for python-rpm-macros)
-    yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-
-    # Install RPM building dependencies
-    yum install -y rpm-build rpmlint findutils python-rpm-macros
+    # Install Python 3 and RPM-building dependencies
+    yum install -y python3 rpm-build rpmlint python-rpm-macros
 
     prep_env
 
-    # Install missing dependencies for building an RPM package
+    # Install missing dependencies for building our RPM package
     yum-builddep -y "$spec_file"
+}
+
+deps_el8() {
+    # Install Python 3, RPM-building dependencies, and builddep DNF plug-in; skips Recommends or
+    # Supplements ("weak dep") packages. glibc-langpack-en is installed as a workaround for BZ#1668400.
+    dnf install --setopt install_weak_deps=false -y python3 rpm-build rpmlint dnf-plugins-core glibc-langpack-en
+
+    prep_env
+
+    # Install missing dependencies for building our RPM package; skips Recommends or Supplements
+    # ("weak dep") packages
+    dnf builddep --setopt install_weak_deps=false -y --spec "$spec_file"
 }
 
 case "$target_os" in
@@ -48,6 +56,9 @@ case "$target_os" in
         ;;
     el7)
         deps_el7
+        ;;
+    el8)
+        deps_el8
         ;;
     *)
         echo "ERROR: unknown target OS specified."
