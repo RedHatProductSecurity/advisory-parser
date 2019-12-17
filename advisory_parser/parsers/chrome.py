@@ -78,7 +78,7 @@ def parse_chrome_advisory(url):
             impact = impact.replace('high', 'important')
             impact = impact.replace('medium', 'moderate')
 
-        bug_ids = re.findall(r'\d{6}', bug_ids)
+        bug_ids = re.findall(r'\d{6,}', bug_ids)
         cves = re.findall(r'CVE-\d{4}-\d{4,}', cves)
         if not bug_ids and not cves:
             warnings.append('Could not find CVEs or bugs; skipping: {}'.format(line))
