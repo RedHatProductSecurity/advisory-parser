@@ -9,10 +9,11 @@ python:
   - "3.5"
   - "3.6"
   - "3.7"
+  - "3.8"
 
 install:
   - pip install -e .
   - pip install -r devel-requirements.txt
 
 script:
-  - pytest tests
+  - pytest tests --verbose
