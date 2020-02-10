@@ -1,0 +1,9 @@
+
+Stable Channel Update for Desktop
+Tuesday, February 4, 2020
+The Chrome team is delighted to announce the promotion of Chrome 80 to the stable channel for Windows, Mac and Linux. This will roll out over the coming days/weeks.Chrome 80.0.3987.87 contains a number of fixes and improvements -- a list of changes is available in the log. Watch out for upcoming Chrome and Chromium blog posts about new features and big efforts delivered in 80.
+Security Fixes and Rewards
+Note: Access to bug details and links may be kept restricted until a majority of users are updated with a fix. We will also retain restrictions if the bug exists in a third party library that other projects similarly depend on, but haven’t yet fixed.
+This update includes 56 security fixes. Below, we highlight fixes that were contributed by external researchers. Please see the Chrome Security Page for more information.
+[$N/A][1038863] High CVE-2019-19880, CVE-2019-19925: Multiple vulnerabilities in SQLite. Reported by Richard Lorenz, SAP on 2020-01-03
+[$N/A][1042535] High CVE-2020-6387: Out of bounds write in WebRTC. Reported by Natalie Silvanovich of Google Project Zero on 2020-01-16
