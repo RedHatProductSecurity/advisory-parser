@@ -40,3 +40,28 @@ def test_parser(get_text_from_url, input_file, url):
                               'description': 'A domain spoofing flaw was found in the Omnibox component of the Chromium browser.\n\nUpstream bug(s):\n\nhttps://code.google.com/p/chromium/issues/detail?id=714196', 'from_url': 'https://chromereleases.googleblog.com/2017/06/stable-channel-update-for-desktop_15.html',
                               'fixed_in': {'chromium-browser': ['59.0.3071.104']}, 'cvss2': None, 'advisory_id': None,
                               'impact': 'moderate', 'cves': ['CVE-2017-5089'], 'public_date': datetime.datetime(2017, 6, 15, 0, 0)}
+
+
+#Test for multiple CVEs in 1 flaw
+
+@patch('advisory_parser.parsers.chrome.get_text_from_url')
+@pytest.mark.parametrize('input_file, url', [
+    ('chrome_multiple-cves-one-flaw.txt', 'https://chromereleases.googleblog.com/2020/02/stable-channel-update-for-desktop.html')
+])
+def test_parser(get_text_from_url, input_file, url):
+
+    file_dir = path.abspath(path.dirname(__file__))
+    with open(path.join(file_dir, 'test_data', input_file), 'r', encoding='utf-8') as f:
+        testing_text = f.read()
+
+    get_text_from_url.return_value = testing_text
+    flaws, warnings = parse_chrome_advisory(url)
+
+    assert len(warnings) == 1
+    assert len(flaws) == 1
+    assert vars(flaws[0]) == {'summary': 'chromium-browser: Out of bounds write in WebRTC',
+                              'cvss3': '8.8/CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H',
+                              'description': 'An out of bounds write flaw was found in the WebRTC component of the Chromium browser.\n\nUpstream bug(s):\n\nhttps://code.google.com/p/chromium/issues/detail?id=1042535', 'from_url': 'https://chromereleases.googleblog.com/2020/02/stable-channel-update-for-desktop.html',
+                              'fixed_in': {'chromium-browser': ['80.0.3987.87']}, 'cvss2': None, 'advisory_id': None,
+                              'impact': 'important', 'cves': ['CVE-2020-6387'], 'public_date': datetime.datetime(2020, 2, 4, 0, 0)}
+

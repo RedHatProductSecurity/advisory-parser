@@ -59,8 +59,15 @@ def parse_chrome_advisory(url):
         # Parse each line containing information about a CVE, e.g.:
         # [$7500][590275] High CVE-2016-1652: XSS in X. Credit to anonymous.
 
+        # If multiple CVEs for one flaw, append CVEs to warnings and continue
+        # [563930] CVE-2015-6787, CVE-2015-6788: Multiple fixes from internal audits...
+        match = re.match(r'(.+CVE-\d{4}-\d{4,}.+CVE-\d{4}-\d{4,})(.+)', line)
+        if match:
+            warnings.append('Flaw contains multiple CVEs, please gather more information and file manually:\n{}'.format(line))
+            continue
+
         # Split into two groups by first encountered colon.
-        match = re.match('(.+CVE-\d{4}-\d{4,}):?(.+)', line)
+        match = re.match(r'(.+CVE-\d{4}-\d{4,}):?(.+)', line)
         if not match:
             warnings.append('Could not parse; skipping: {}'.format(line))
             continue
