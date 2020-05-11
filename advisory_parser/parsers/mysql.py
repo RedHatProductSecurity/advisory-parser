@@ -98,8 +98,8 @@ def parse_mysql_advisory(url):
 
     flaws, warnings = [], []
     for row in table_rows:
-        # First anchor hyperlink contains the CVE
-        cve = row.find('a').string
+        # First anchor id contains the CVE
+        cve = row.find('a').get('id')
 
         # Second td contains a description
         description_cell = row.find_all('td')[1].contents
@@ -115,7 +115,7 @@ def parse_mysql_advisory(url):
         description = '\n'.join(description)
 
         # Take the text part only, i.e. anything before the CVSS string
-        description, cvss_text = re.split('\n\s*CVSS v3', description)
+        description, cvss_text = re.split(r'\n\s*CVSS v3', description)
 
         # Filter out some whitespace
         description = description.replace('\n', ' ').replace('  ', ' ').strip()
