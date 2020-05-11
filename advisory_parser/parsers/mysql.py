@@ -22,7 +22,7 @@ def _nearest_tuesday(year, month, day=17):
     products. They are available to customers with valid support contracts.
     They are released on the Tuesday closest to the 17th day of January, April,
     July and October."
-    [https://www.oracle.com/technetwork/topics/security/alerts-086861.html]
+    [https://www.oracle.com/security-alerts/]
     """
     month_to_num = {
         'jan': 1, 'feb': 2, 'mar': 3, 'apr': 4, 'may': 5, 'jun': 6,
@@ -66,30 +66,33 @@ def create_mariadb_cve_map():
 
 
 def parse_mysql_advisory(url):
+    # The url passed in can be either the main CPU page, or the "Text Form of
+    # Risk Matrices" (aka verbose) page
 
-    if 'verbose' not in url:
-        raise AdvisoryParserTextException(
-            'Please provide a verbose URL, e.g.: '
-            'http://www.oracle.com/technetwork/security-advisory/cpuoct2016verbose-2881725.html'
-        )
+    # Parse url first to get base url and cpu date
+    url_match = re.search(r'/cpu([a-z]{3})(\d{4})(verbose)?\.html(#.*)?$', url)
+    if not url_match:
+        raise AdvisoryParserTextException('Unexpected CPU URL format.')
 
-    advisory_html = get_request(url)
+    # Get base url and determine advisory_url and verbose_url
+    url = url[0 : url_match.start() + len('/cpuMMMYYYY')]
+    advisory_url = url + '.html#AppendixMSQL'
+    verbose_url = url + 'verbose.html'
+
+    # Extract the CPU's month and year from the URL since the verbose page has
+    # no dates on it
+    month, year = url_match.groups()[0:2]
+    cpu_date = _nearest_tuesday(int(year), month)
+    advisory_id = 'CPU {} {}'.format(month.capitalize(), year)
+
+    # Fetch the CPU verbose page
+    advisory_html = get_request(verbose_url)
     soup = bs4.BeautifulSoup(advisory_html, 'html.parser')
 
     mysql_table = soup.find(id='MSQL').find_next('table')
 
     # The first row is the table header so throw that one away
     table_rows = mysql_table.find_all('tr')[1:]
-    advisory_url = table_rows[0].find('a', text='Advisory')['href']
-
-    # Extract the CPU's month and year from the URL since the page has no dates on it.
-    date_match = re.search(r'/cpu([a-z]{3})(\d{4})verbose', url)
-    if not date_match:
-        raise AdvisoryParserTextException('Could not parse date from CPU URL.')
-
-    month, year = date_match.groups()
-    cpu_date = _nearest_tuesday(int(year), month)
-    advisory_id = 'CPU {} {}'.format(month.capitalize(), year)
 
     mariadb_cve_map = create_mariadb_cve_map()
 
