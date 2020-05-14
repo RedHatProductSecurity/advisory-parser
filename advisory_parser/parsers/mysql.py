@@ -122,8 +122,8 @@ def parse_mysql_advisory(url):
             warnings.append('ERROR: Could not identify product in {}; skipping:\n\n{}\n---'
                             .format(cve, description))
             continue
-        if 'MySQL Server' not in product.group(1):
-            warnings.append('ERROR: Skipping {}; does not affect MySQL Server component'
+        if 'MySQL Server' not in product.group(1) and 'MySQL Client' not in product.group(1):
+            warnings.append('ERROR: Skipping {}; does not affect MySQL Server or Client component'
                             .format(cve))
             continue
 
