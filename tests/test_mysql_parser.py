@@ -29,7 +29,7 @@ def test_nearest_tuesday(year, month, day, expected_date):
 @patch('advisory_parser.parsers.mysql.get_request')
 @patch('advisory_parser.parsers.mysql.create_mariadb_cve_map')
 @pytest.mark.parametrize('input_file, url', [
-    ('mysql_cpu-apr-2019.html', 'https://www.oracle.com/technetwork/security-advisory/cpuapr2019verbose-5072824.html')
+    ('mysql_cpu-apr-2019.html', 'https://www.oracle.com/security-alerts/cpuapr2019.html')
 ])
 def test_parser(create_mariadb_cve_map, get_request, input_file, url):
 
@@ -63,5 +63,5 @@ def test_parser(create_mariadb_cve_map, get_request, input_file, url):
                                              'unauthorized access to critical data or complete access to '
                                              'all MySQL Server accessible data.',
                               'fixed_in': {'mysql': ['5.6.43', '5.7.25', '8.0.14']},
-                              'from_url': 'http://www.oracle.com/technetwork/security-advisory/cpuapr2019-5072813.html',
+                              'from_url': 'https://www.oracle.com/security-alerts/cpuapr2019.html#AppendixMSQL',
                               'advisory_id': 'CPU Apr 2019'}
