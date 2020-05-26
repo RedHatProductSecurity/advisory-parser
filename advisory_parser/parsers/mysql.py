@@ -70,7 +70,7 @@ def parse_mysql_advisory(url):
     # Risk Matrices" (aka verbose) page
 
     # Parse url first to get base url and cpu date
-    url_match = re.search(r'/cpu([a-z]{3})(\d{4})(verbose)?\.html(#.*)?$', url)
+    url_match = re.search(r'/cpu([a-z]{3})(\d{4})(?:verbose)?\.html(?:#.*)?$', url)
     if not url_match:
         raise AdvisoryParserTextException('Unexpected CPU URL format.')
 
@@ -81,7 +81,7 @@ def parse_mysql_advisory(url):
 
     # Extract the CPU's month and year from the URL since the verbose page has
     # no dates on it
-    month, year = url_match.groups()[0:2]
+    month, year = url_match.groups()
     cpu_date = _nearest_tuesday(int(year), month)
     advisory_id = 'CPU {} {}'.format(month.capitalize(), year)
 
