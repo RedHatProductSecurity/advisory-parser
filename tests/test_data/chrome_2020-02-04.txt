@@ -1,0 +1,357 @@
+Chrome Releases: Stable Channel Update for Desktop
+Chrome Releases
+
+Release updates from the Chrome team
+
+Stable Channel Update for Desktop
+Tuesday, February 4, 2020
+The Chrome team is delighted to announce the promotion of Chrome 80 to the stable channel for Windows, Mac and Linux. This will roll out over the coming days/weeks.
+Chrome 80.0.3987.87 contains a number of fixes and improvements -- a list of changes is available in the log. Watch out for upcoming Chrome and Chromium blog posts about new features and big efforts delivered in 80.
+Security Fixes and Rewards
+Note: Access to bug details and links may be kept restricted until a majority of users are updated with a fix. We will also retain restrictions if the bug exists in a third party library that other projects similarly depend on, but haven’t yet fixed.
+This update includes 56 security fixes. Below, we highlight fixes that were contributed by external researchers. Please see the Chrome Security Page for more information.
+[$5000][1034394] High CVE-2020-6381: Integer overflow in JavaScript. Reported by The UK's National Cyber Security Centre (NCSC) on 2019-12-09
+[$2000][1031909] High CVE-2020-6382: Type Confusion in JavaScript. Reported by Soyeon Park and Wen Xu from SSLab, Gatech on 2019-12-08
+[$500][1020745] High CVE-2019-18197: Multiple vulnerabilities in XML. Reported by Jordan Pryde from the BlackBerry Security Incident Response Team on 2019-11-01
+[$500][1042700] High CVE-2019-19926: Inappropriate implementation in SQLite. Reported by Richard Lorenz, SAP on 2020-01-16
+[$N/A][1035399] High CVE-2020-6385: Insufficient policy enforcement in storage. Reported by Sergei Glazunov of Google Project Zero on 2019-12-18
+[$N/A][1038863] High CVE-2019-19880, CVE-2019-19925: Multiple vulnerabilities in SQLite. Reported by Richard Lorenz, SAP on 2020-01-03
+[$N/A][1042535] High CVE-2020-6387: Out of bounds write in WebRTC. Reported by Natalie Silvanovich of Google Project Zero on 2020-01-16
+[$N/A][1042879] High CVE-2020-6388: Out of bounds memory access in WebAudio. Reported by Sergei Glazunov of Google Project Zero on 2020-01-16
+[$N/A][1042933] High CVE-2020-6389: Out of bounds write in WebRTC. Reported by Natalie Silvanovich of Google Project Zero on 2020-01-16
+[$N/A][1045874] High CVE-2020-6390: Out of bounds memory access in streams. Reported by Sergei Glazunov of Google Project Zero on 2020-01-27
+[$10000][1017871] Medium CVE-2020-6391: Insufficient validation of untrusted input in Blink. Reported by Michał Bentkowski of Securitum on 2019-10-24
+[$5000][1030411] Medium CVE-2020-6392: Insufficient policy enforcement in extensions. Reported by Microsoft Edge Team on 2019-12-03
+[$5000][1035058] Medium CVE-2020-6393: Insufficient policy enforcement in Blink. Reported by Mark Amery on 2019-12-17
+[$5000][999001] Medium CVE-2020-6499: Inappropriate implementation in AppCache. Reported by Kevin Higgs (@themalwareman) on 2019-08-29
+[$3000][1014371] Medium CVE-2020-6394: Insufficient policy enforcement in Blink. Reported by Phil Freo on 2019-10-15
+[$3000][1022855] Medium CVE-2020-6395: Out of bounds read in JavaScript. Reported by Pierre Langlois from Arm on 2019-11-08
+[$3000][1035271] Medium CVE-2020-6396: Inappropriate implementation in Skia. Reported by William Luc Ritchie on 2019-12-18
+[$2000][1027408] Medium CVE-2020-6397: Incorrect security UI in sharing. Reported by Khalil Zhani on 2019-11-22
+[$2000][1032090] Medium CVE-2020-6398: Uninitialized use in PDFium. Reported by pdknsk on 2019-12-09
+[$2000][1039869] Medium CVE-2020-6399: Insufficient policy enforcement in AppCache. Reported by Luan Herrera (@lbherrera_) on 2020-01-07
+[$2000][843095] Medium CVE-2020-6500: Inappropriate implementation in interstitials. Reported by evi1m0 of Bilibili Security Team on 2018-05-15
+[$1000][1038036] Medium CVE-2020-6400: Inappropriate implementation in CORS. Reported by Takashi Yoneuchi (@y0n3uchy) on 2019-12-27
+[$500][1017707] Medium CVE-2020-6401: Insufficient validation of untrusted input in Omnibox. Reported by Tzachy Horesh on 2019-10-24
+[$500][1029375] Medium CVE-2020-6402: Insufficient policy enforcement in downloads. Reported by Vladimir Metnew (@vladimir_metnew) on 2019-11-28
+[$500][990581] Medium CVE-2020-6501: Insufficient policy enforcement in CSP. Reported by Zhong Zhaochen of andsecurity.cn on 2019-08-03
+[$TBD][1006012] Medium CVE-2020-6403: Incorrect security UI in Omnibox. Reported by Khalil Zhani on 2019-09-19
+[$N/A][1024256] Medium CVE-2020-6404: Inappropriate implementation in Blink. Reported by kanchi on 2019-11-13
+[$N/A][1042145] Medium CVE-2020-6405: Out of bounds read in SQLite. Reported by Yongheng Chen(Ne0) & Rui Zhong(zr33) on 2020-01-15
+[$N/A][1042254] Medium CVE-2020-6406: Use after free in audio. Reported by Sergei Glazunov of Google Project Zero on 2020-01-15
+[$N/A][1042578] Medium CVE-2019-19923: Out of bounds memory access in SQLite. Reported by Richard Lorenz, SAP on 2020-01-16
+[$1000][1026546] Low CVE-2020-6408: Insufficient policy enforcement in CORS. Reported by Zhong Zhaochen of andsecurity.cn on 2019-11-20
+[$1000][1037889] Low CVE-2020-6409: Inappropriate implementation in Omnibox. Reported by Divagar S and Bharathi V from Karya Technologies on 2019-12-26
+[$500][881675] Low CVE-2020-6410: Insufficient policy enforcement in navigation. Reported by evi1m0 of Bilibili Security Team on 2018-09-07
+[$500][929711] Low CVE-2020-6411: Insufficient validation of untrusted input in Omnibox. Reported by Khalil Zhani on 2019-02-07
+[$500][785159] Low CVE-2020-6502: Incorrect security UI in permissions. Reported by evi1m0 of Bilibili Security Team on 2017-11-15
+[$N/A][968505] Low CVE-2020-6412: Insufficient validation of untrusted input in Omnibox. Reported by Zihan Zheng (@zzh1996) of University of Science and Technology of China on 2019-05-30
+[$N/A][1005713] Low CVE-2020-6413: Inappropriate implementation in Blink. Reported by Michał Bentkowski of Securitum on 2019-09-19
+[$N/A][1021855] Low CVE-2020-6414: Insufficient policy enforcement in Safe Browsing. Reported by Lijo A.T on 2019-11-06
+[$N/A][1029576] Low CVE-2020-6415: Inappropriate implementation in JavaScript. Reported by Avihay Cohen @ SeraphicAlgorithms on 2019-11-30
+[$N/A][1031895] Low CVE-2020-6416: Insufficient data validation in streams. Reported by Woojin Oh(@pwn_expoit) of STEALIEN on 2019-12-08
+[$N/A][1033824] Low CVE-2020-6417: Inappropriate implementation in installer. Reported by Renato "Wrath" Moraes and Altieres "FallenHawk" Rohr on 2019-12-13
+We would also like to thank all security researchers that worked with us during the development cycle to prevent security bugs from ever reaching the stable channel.As usual, our ongoing internal security work was responsible for a wide range of fixes:
+[1048330] Various fixes from internal audits, fuzzing and other initiatives
+Many of our security bugs are detected using AddressSanitizer, MemorySanitizer, UndefinedBehaviorSanitizer, Control Flow Integrity, libFuzzer, or AFL.
+Interested in switching release channels?  Find out how here. If you find a new issue, please let us know by filing a bug. The community help forum is also a great place to reach out for help or learn about common issues.
+Thank you,
+Srinivas Sista
+Google
+
+Labels:
+Desktop Update
+,
+
+Stable updates
+
+
+
+
+
+
+Labels
+
+
+Admin Console
+43
+Android WebView
+19
+Beta
+12
+Beta updates
+1056
+chrome
+1
+Chrome Beta for Android
+226
+Chrome Dev for Android
+4
+Chrome for Android
+127
+Chrome for iOS
+27
+Chrome for Meetings
+5
+Chrome OS
+903
+Chrome OS Management
+12
+Chromecast Update
+6
+Desktop Update
+343
+dev update
+90
+Dev updates
+1022
+Flash Player update
+5
+Hangouts Meet hardware
+5
+Stable updates
+632
+
+
+Archive
+
+
+
+
+
+
+
+
+2020
+Jun
+May
+Apr
+Mar
+Feb
+Jan
+
+
+
+
+
+
+2019
+Dec
+Nov
+Oct
+Sep
+Aug
+Jul
+Jun
+May
+Apr
+Mar
+Feb
+Jan
+
+
+
+
+
+
+2018
+Dec
+Nov
+Oct
+Sep
+Aug
+Jul
+Jun
+May
+Apr
+Mar
+Feb
+Jan
+
+
+
+
+
+
+2017
+Dec
+Nov
+Oct
+Sep
+Aug
+Jul
+Jun
+May
+Apr
+Mar
+Feb
+Jan
+
+
+
+
+
+
+2016
+Dec
+Nov
+Oct
+Sep
+Aug
+Jul
+Jun
+May
+Apr
+Mar
+Feb
+Jan
+
+
+
+
+
+
+2015
+Dec
+Nov
+Oct
+Sep
+Aug
+Jul
+Jun
+May
+Apr
+Mar
+Feb
+Jan
+
+
+
+
+
+
+2014
+Dec
+Nov
+Oct
+Sep
+Aug
+Jul
+Jun
+May
+Apr
+Mar
+Feb
+Jan
+
+
+
+
+
+
+2013
+Dec
+Nov
+Oct
+Sep
+Aug
+Jul
+Jun
+May
+Apr
+Mar
+Feb
+Jan
+
+
+
+
+
+
+2012
+Dec
+Nov
+Oct
+Sep
+Aug
+Jul
+Jun
+May
+Apr
+Mar
+Feb
+Jan
+
+
+
+
+
+
+2011
+Dec
+Nov
+Oct
+Sep
+Aug
+Jul
+Jun
+May
+Apr
+Mar
+Feb
+Jan
+
+
+
+
+
+
+2010
+Dec
+Nov
+Oct
+Sep
+Aug
+Jul
+Jun
+May
+Apr
+Mar
+Feb
+Jan
+
+
+
+
+
+
+2009
+Dec
+Nov
+Oct
+Sep
+Aug
+Jul
+Jun
+May
+Apr
+Mar
+Feb
+Jan
+
+
+
+
+
+
+2008
+Dec
+Nov
+Oct
+Sep
+Give us feedback in our  Product Forums.
+Google
+
+Privacy
+
+Terms
