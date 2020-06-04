@@ -11,10 +11,10 @@ from .utils import get_text_from_url
 
 # Chromium does not publish CVSS scores with their CVEs so these values are
 # best-effort guesses based on impact.
-CVSS3_MAP = {'critical': '9.6/CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H',
-             'important': '8.8/CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H',
-             'moderate': '6.5/CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N',
-             'low': '4.3/CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:L'}
+CVSS3_MAP = {'critical': '9.6/CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H',
+             'important': '8.8/CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H',
+             'moderate': '6.5/CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N',
+             'low': '4.3/CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:L'}
 
 
 def parse_chrome_advisory(url):
