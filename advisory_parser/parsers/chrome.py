@@ -7,7 +7,7 @@ from datetime import datetime
 
 from advisory_parser.exceptions import AdvisoryParserTextException
 from advisory_parser.flaw import Flaw
-from .utils import get_text_from_url
+from .utils import get_text_from_url, CVE_REGEX
 
 # Chromium does not publish CVSS scores with their CVEs so these values are
 # best-effort guesses based on impact.
@@ -50,7 +50,7 @@ def parse_chrome_advisory(url):
 
     # Filter out lines that contain CVEs
     cve_lines = [line.strip() for line in flaws_text.split('\n')
-                 if re.search(r'CVE-\d{4}-\d{4,}', line)]
+                 if CVE_REGEX.search(line)]
     if not cve_lines:
         raise AdvisoryParserTextException('Could not find any CVEs in {}'.format(url))
 
@@ -58,36 +58,35 @@ def parse_chrome_advisory(url):
     for line in cve_lines:
         # Parse each line containing information about a CVE, e.g.:
         # [$7500][590275] High CVE-2016-1652: XSS in X. Credit to anonymous.
-
-        # Split into two groups by first encountered colon.
-        match = re.match('(.+CVE-\d{4}-\d{4,}):?(.+)', line)
-        if not match:
-            warnings.append('Could not parse; skipping: {}'.format(line))
+        # First, split into two groups by first encountered colon.
+        metadata, text = line.split(':')
+        if not metadata or not text:
+            warnings.append('Could not parse line: {}'.format(line))
             continue
-
-        metadata, text = match.group(1).strip(), match.group(2).strip()
 
         # If a line contains Various, it describes internal fixes, e.g.:
         # [563930] CVE-2015-6787: Various fixes from internal audits...
         if 'Various' in text:
-            bug_ids, cves = metadata.split(' ', 1)
             impact = 'important'
         else:
-            bug_ids, impact, cves = metadata.rsplit(' ', 2)
+            match = re.search(r'(High|Medium|Low)', metadata)
+            if not match:
+                print('Could not find impact; skipping: {}'.format(line))
+                continue
+            else:
+                impact = match.group(1)
+
             impact = impact.lower()
             impact = impact.replace('high', 'important')
             impact = impact.replace('medium', 'moderate')
 
-        bug_ids = re.findall(r'\d{6,}', bug_ids)
-        cves = re.findall(r'CVE-\d{4}-\d{4,}', cves)
+        bug_ids = re.findall(r'\d{6,}', metadata)
+        cves = CVE_REGEX.findall(metadata)
         if not bug_ids and not cves:
             warnings.append('Could not find CVEs or bugs; skipping: {}'.format(line))
             continue
-        if not impact:
-            print('Could not find impact; skipping: {}'.format(line))
-            continue
 
-        summary = text.split('.')[0]
+        summary = text.split('.')[0].strip()
         if ' in ' in summary:
             issue, component = summary.split(' in ', 1)
             article = 'An' if issue.lower()[0] in 'aeiou' else 'A'
