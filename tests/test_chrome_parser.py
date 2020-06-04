@@ -1,7 +1,7 @@
-import pytest
 import datetime
-from os import path
 from io import open
+from os import path
+
 try:
     from unittest.mock import patch
 except ImportError:
@@ -10,17 +10,17 @@ except ImportError:
 from advisory_parser.parsers.chrome import parse_chrome_advisory
 
 
-@patch('advisory_parser.parsers.chrome.get_text_from_url')
-@pytest.mark.parametrize('input_file, url', [
-    ('chrome_2017-06-15.txt', 'https://chromereleases.googleblog.com/2017/06/stable-channel-update-for-desktop_15.html')
-])
-def test_parser(get_text_from_url, input_file, url):
-
+def load_test_data(fname):
     file_dir = path.abspath(path.dirname(__file__))
-    with open(path.join(file_dir, 'test_data', input_file), 'r', encoding='utf-8') as f:
+    with open(path.join(file_dir, 'test_data', fname), 'r', encoding='utf-8') as f:
         testing_text = f.read()
+    return testing_text
 
-    get_text_from_url.return_value = testing_text
+
+@patch('advisory_parser.parsers.chrome.get_text_from_url')
+def test_parser(get_text_from_url):
+    get_text_from_url.return_value = load_test_data('chrome_2017-06-15.txt')
+    url = 'https://chromereleases.googleblog.com/2017/06/stable-channel-update-for-desktop_15.html'
     flaws, warnings = parse_chrome_advisory(url)
 
     assert not warnings
@@ -40,3 +40,14 @@ def test_parser(get_text_from_url, input_file, url):
                               'description': 'A domain spoofing flaw was found in the Omnibox component of the Chromium browser.\n\nUpstream bug(s):\n\nhttps://code.google.com/p/chromium/issues/detail?id=714196', 'from_url': 'https://chromereleases.googleblog.com/2017/06/stable-channel-update-for-desktop_15.html',
                               'fixed_in': {'chromium-browser': ['59.0.3071.104']}, 'cvss2': None, 'advisory_id': None,
                               'impact': 'moderate', 'cves': ['CVE-2017-5089'], 'public_date': datetime.datetime(2017, 6, 15, 0, 0)}
+
+
+@patch('advisory_parser.parsers.chrome.get_text_from_url')
+def test_parser_multi_cve(get_text_from_url):
+    get_text_from_url.return_value = load_test_data('chrome_2020-02-04.txt')
+    url = 'https://chromereleases.googleblog.com/2017/06/stable-channel-update-for-desktop_15.html'
+    flaws, warnings = parse_chrome_advisory(url)
+
+    assert not warnings
+    assert len(flaws) == 41
+    assert flaws[5].cves == ['CVE-2019-19880', 'CVE-2019-19925']
