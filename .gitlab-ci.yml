@@ -9,7 +9,7 @@ before_script:
 
 
 test:
-  image: registry.fedoraproject.org/fedora:31
+  image: registry.fedoraproject.org/fedora:32
   stage: test
 
   script:
@@ -19,7 +19,7 @@ test:
 
 
 build_sdist:
-  image: registry.fedoraproject.org/fedora:31
+  image: registry.fedoraproject.org/fedora:32
   stage: build_sdist
 
   when: manual
@@ -35,7 +35,7 @@ build_sdist:
 
 rpm:fedora-latest:
   # Build latest Fedora RPM
-  image: registry.fedoraproject.org/fedora:31
+  image: registry.fedoraproject.org/fedora:32
   stage: build_rpm
 
   dependencies:
@@ -52,7 +52,7 @@ rpm:fedora-latest:
 
 rpm:fedora-secondary:
   # Build secondary Fedora RPM
-  image: registry.fedoraproject.org/fedora:30
+  image: registry.fedoraproject.org/fedora:31
   stage: build_rpm
 
   dependencies:
