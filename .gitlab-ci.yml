@@ -26,6 +26,7 @@ build_sdist:
   allow_failure: false  # Do not execute RPM jobs below unless this one is run/succeeds.
 
   script:
+    - dnf -y install python3-setuptools
     - python3 setup.py clean sdist
 
   artifacts:
