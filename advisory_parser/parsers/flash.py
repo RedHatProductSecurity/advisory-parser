@@ -34,7 +34,7 @@ def parse_flash_advisory(url):
     table_rows = details_table.find_all('tr')
 
     # The first row is the header, the second contains the data we need
-    advisory_id, public_date, _ = [elem.get_text() for elem in table_rows[1].find_all('td')]
+    advisory_id, public_date, _ = [elem.get_text().strip() for elem in table_rows[1].find_all('td')]
 
     try:
         public_date = datetime.strptime(public_date, '%B %d, %Y')
