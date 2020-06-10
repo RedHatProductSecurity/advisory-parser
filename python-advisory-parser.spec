@@ -64,7 +64,7 @@ description, and others.
 %{python3_sitelib}/*
 
 %changelog
-* Web Jun 10 2020 Martin Prpic <mprpic AT redhat.com> 1.9-1
+* Wed Jun 10 2020 Martin Prpic <mprpic AT redhat.com> 1.10-1
 - release of version 1.10
 
 * Tue Dec 17 2019 Martin Prpic <mprpic AT redhat.com> 1.9-1
