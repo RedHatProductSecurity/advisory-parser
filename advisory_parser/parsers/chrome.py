@@ -59,7 +59,7 @@ def parse_chrome_advisory(url):
         # Parse each line containing information about a CVE, e.g.:
         # [$7500][590275] High CVE-2016-1652: XSS in X. Credit to anonymous.
         # First, split into two groups by first encountered colon.
-        metadata, text = line.split(':')
+        metadata, text = line.split(': ')
         if not metadata or not text:
             warnings.append('Could not parse line: {}'.format(line))
             continue
