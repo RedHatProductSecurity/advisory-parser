@@ -132,7 +132,7 @@ def parse_mysql_advisory(url):
         description = "\n".join(description)
 
         # Take the text part only, i.e. anything before the CVSS string
-        description, cvss_text = re.split(r"\n\s*CVSS v3", description)
+        description, cvss_text = re.split(r"\n\s*CVSS v?3\.[0-9] (?=Base Score)", description)
 
         # Filter out some whitespace
         description = description.replace("\n", " ").replace("  ", " ").strip()
@@ -152,7 +152,7 @@ def parse_mysql_advisory(url):
             continue
 
         # Filter out the lines that start with CVSS and find the score + vector
-        match = re.search(r"Score\s*(\d?\d\.\d).*Vector:\s*\(([^)]+)\)", cvss_text)
+        match = re.search(r"Base Score\s*(\d?\d\.\d).*Vector:\s*\(([^)]+)\)", cvss_text)
         if not match:
             cvss3 = None
             warnings.append("Could not parse CVSSv3 score from {} description".format(cve))

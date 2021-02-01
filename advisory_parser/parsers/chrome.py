@@ -70,7 +70,7 @@ def parse_chrome_advisory(url):
         if "Various" in text:
             impact = "important"
         else:
-            match = re.search(r"(High|Medium|Low)", metadata)
+            match = re.search(r"(Critical|High|Medium|Low)", metadata)
             if not match:
                 print("Could not find impact; skipping: {}".format(line))
                 continue
