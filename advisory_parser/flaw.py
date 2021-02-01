@@ -3,19 +3,30 @@
 # License: LGPLv3+
 
 IMPACT_WEIGHT = {
-    'critical': 0,
-    'important': 1,
-    'moderate': 2,
-    'low': 3,
-    'unspecified': 4,
+    "critical": 0,
+    "important": 1,
+    "moderate": 2,
+    "low": 3,
+    "unspecified": 4,
 }
 
 
 class Flaw:
     """Object that represents a scraped security flaw with all its metadata"""
 
-    def __init__(self, from_url=None, cves=None, summary=None, public_date=None, cvss3=None,
-                 cvss2=None, impact='unspecified', description=None, fixed_in=None, advisory_id=None):
+    def __init__(
+        self,
+        from_url=None,
+        cves=None,
+        summary=None,
+        public_date=None,
+        cvss3=None,
+        cvss2=None,
+        impact="unspecified",
+        description=None,
+        fixed_in=None,
+        advisory_id=None,
+    ):
 
         # List of CVEs relating to a single security flaw.
         self.cves = cves or []
@@ -47,9 +58,11 @@ class Flaw:
 
     # Sort highest impact to lowest impact
     def __lt__(self, other):
-        return (IMPACT_WEIGHT.get(self.impact, IMPACT_WEIGHT['unspecified']) <
-                IMPACT_WEIGHT.get(other.impact, IMPACT_WEIGHT['unspecified']))
+        return IMPACT_WEIGHT.get(self.impact, IMPACT_WEIGHT["unspecified"]) < IMPACT_WEIGHT.get(
+            other.impact, IMPACT_WEIGHT["unspecified"]
+        )
 
     def __gt__(self, other):
-        return (IMPACT_WEIGHT.get(self.impact, IMPACT_WEIGHT['unspecified']) >
-                IMPACT_WEIGHT.get(other.impact, IMPACT_WEIGHT['unspecified']))
+        return IMPACT_WEIGHT.get(self.impact, IMPACT_WEIGHT["unspecified"]) > IMPACT_WEIGHT.get(
+            other.impact, IMPACT_WEIGHT["unspecified"]
+        )

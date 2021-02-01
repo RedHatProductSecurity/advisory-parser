@@ -18,25 +18,25 @@ class Parser:
         :return: List of Flaw objects
         """
         if not url:
-            raise AdvisoryParserUrlException('No URL specified')
+            raise AdvisoryParserUrlException("No URL specified")
 
-        if 'chromereleases' in url:
+        if "chromereleases" in url:
             return parse_chrome_advisory(url)
 
-        elif 'wireshark.org' in url:
+        elif "wireshark.org" in url:
             pass
 
-        elif 'flash-player' in url:
+        elif "flash-player" in url:
             return parse_flash_advisory(url)
 
-        elif 'oracle.com' in url:
+        elif "oracle.com" in url:
             return parse_mysql_advisory(url)
 
-        elif 'jenkins-ci' in url:
+        elif "jenkins-ci" in url:
             pass
 
-        elif 'phpmyadmin' in url:
+        elif "phpmyadmin" in url:
             pass
 
         else:
-            raise AdvisoryParserUrlException('Could not find parser for: {}'.format(url))
+            raise AdvisoryParserUrlException("Could not find parser for: {}".format(url))
