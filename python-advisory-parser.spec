@@ -10,7 +10,7 @@
 %endif
 
 Name:           python-%{pyname}
-Version:        1.10
+Version:        1.11
 Release:        1%{?dist}
 Summary:        %{summary}
 
