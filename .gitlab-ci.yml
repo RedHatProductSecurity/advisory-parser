@@ -36,7 +36,7 @@ build_sdist:
 
 rpm:fedora-latest:
   # Build latest Fedora RPM
-  image: registry.fedoraproject.org/fedora:32
+  image: registry.fedoraproject.org/fedora:33
   stage: build_rpm
 
   dependencies:
@@ -53,7 +53,7 @@ rpm:fedora-latest:
 
 rpm:fedora-secondary:
   # Build secondary Fedora RPM
-  image: registry.fedoraproject.org/fedora:31
+  image: registry.fedoraproject.org/fedora:32
   stage: build_rpm
 
   dependencies:
