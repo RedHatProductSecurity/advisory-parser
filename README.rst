@@ -1,10 +1,6 @@
 Advisory Parser
 ===============
 
-.. image:: https://img.shields.io/travis/mprpic/advisory-parser/master.svg
-   :target: https://travis-ci.org/mprpic/advisory-parser
-   :alt: Travis CI test status
-
 Upstream repository: `<https://github.com/mprpic/advisory-parser>`_
 
 This library allows you to parse data from security advisories of certain
