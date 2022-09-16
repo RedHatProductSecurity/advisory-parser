@@ -1,8 +1,6 @@
 Advisory Parser
 ===============
 
-Upstream repository: `<https://github.com/mprpic/advisory-parser>`_
-
 This library allows you to parse data from security advisories of certain
 projects to extract information about security issues. The parsed
 information includes metadata such as impact, CVSS score, summary,
