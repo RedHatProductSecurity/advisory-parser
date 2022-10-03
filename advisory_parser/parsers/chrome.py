@@ -46,7 +46,7 @@ def parse_chrome_advisory(url):
 
     # Find Chrome version, e.g. 46.0.2490.71
     try:
-        fixed_in = re.search(r"\d{2}\.\d\.\d{4}\.\d{2,3}", flaws_text).group(0)
+        fixed_in = re.search(r"\d{2,3}\.\d\.\d{4}\.\d{2,3}", flaws_text).group(0)
     except ValueError:
         raise AdvisoryParserTextException("Could not find fixed-in version in {}".format(url))
 
