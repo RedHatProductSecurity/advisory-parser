@@ -11,7 +11,7 @@ from advisory_parser.exceptions import AdvisoryParserTextException
 from advisory_parser.flaw import Flaw
 from .utils import get_request, get_text_from_url, CVE_REGEX
 
-MARIADB_VULN_PAGE = "https://mariadb.com/kb/en/library/security/"
+MARIADB_VULN_PAGE = "https://mariadb.com/kb/en/security/"
 VERSION_REGEX = re.compile(r"(\d\d?\.\d\.\d\d?)")
 
 
