@@ -64,7 +64,7 @@ def parse_flash_advisory(url):
     vuln_data = []
     for row in table_rows[1:]:
         vuln_category, vuln_impact, severity, cve = [
-            elem.get_text().strip().replace(u"\xa0", u" ") for elem in row.find_all("td")
+            elem.get_text().strip().replace("\xa0", " ") for elem in row.find_all("td")
         ]
         vuln_data.append((vuln_impact, vuln_category, severity, cve))
 
