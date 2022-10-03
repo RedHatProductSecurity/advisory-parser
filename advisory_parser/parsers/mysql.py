@@ -132,7 +132,15 @@ def parse_mysql_advisory(url):
         description = "\n".join(description)
 
         # Take the text part only, i.e. anything before the CVSS string
-        description, cvss_text = re.split(r"\n\s*CVSS v?3\.[0-9] (?=Base Score)", description)
+        desc_cvss = re.split(r"\n\s*CVSS v?3\.[0-9] (?=Base Score)", description)
+        if len(desc_cvss) != 2:
+            warnings.append(
+                "ERROR: Could not identify CVSS score in {}; skipping:\n\n{}\n---".format(
+                    cve, description
+                )
+            )
+            continue
+        description, cvss_text = desc_cvss
 
         # Filter out some whitespace
         description = description.replace("\n", " ").replace("  ", " ").strip()
