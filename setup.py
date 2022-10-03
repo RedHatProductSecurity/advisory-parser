@@ -12,12 +12,12 @@ requires = ["beautifulsoup4>=4.0.0"]
 
 setup(
     name="advisory-parser",
-    version="1.11",
+    version="1.12",
     description="Security flaw parser for upstream security advisories",
     long_description=description,
-    url="https://github.com/mprpic/advisory-parser",
+    url="https://github.com/RedHatProductSecurity/advisory-parser",
     author="Martin Prpič, Red Hat Product Security",
-    author_email="mprpic@redhat.com",
+    author_email="secalert@redhat.com",
     license="LGPLv3+",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
