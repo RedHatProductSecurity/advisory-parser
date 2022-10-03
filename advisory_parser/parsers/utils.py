@@ -4,7 +4,7 @@
 
 import re
 from urllib.error import HTTPError, URLError
-from urllib.request import urlopen
+from urllib.request import urlopen, Request
 
 from bs4 import BeautifulSoup
 
@@ -14,8 +14,13 @@ CVE_REGEX = re.compile(r"CVE-\d{4}-\d{4,}")
 
 
 def get_request(url):
+    user_agent = (
+        "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"
+    )
+    headers = {"User-Agent": user_agent}
+    request = Request(url, None, headers)
     try:
-        res = urlopen(url)
+        res = urlopen(request)
     except HTTPError as e:
         error_msg = "Failed to GET with status code: {}".format(e.code)
         raise AdvisoryParserGetContentException(error_msg)
