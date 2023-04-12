@@ -27,7 +27,6 @@ class Flaw:
         fixed_in=None,
         advisory_id=None,
     ):
-
         # List of CVEs relating to a single security flaw.
         self.cves = cves or []
 

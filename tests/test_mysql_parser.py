@@ -37,7 +37,6 @@ def test_nearest_tuesday(year, month, day, expected_date):
     [("mysql_cpu-apr-2019.html", "https://www.oracle.com/security-alerts/cpuapr2019.html")],
 )
 def test_parser(create_mariadb_cve_map, get_request, input_file, url):
-
     file_dir = path.abspath(path.dirname(__file__))
     with open(path.join(file_dir, "test_data", input_file), "r", encoding="utf-8") as f:
         testing_html = f.read()

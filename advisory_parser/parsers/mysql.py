@@ -55,7 +55,6 @@ def _nearest_tuesday(year, month, day=17):
 
 
 def create_mariadb_cve_map():
-
     # Pull plain text of the MariaDB page since the HTML is invalid: it
     # doesn't define </li> ending tags for list elements. The HTML would
     # have to be parsed with a more lenient parser (html5lib), which is an

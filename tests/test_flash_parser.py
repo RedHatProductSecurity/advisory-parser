@@ -120,7 +120,6 @@ apsb17_33 = [
     ],
 )
 def test_parser(get_request, input_file, url, expected_data):
-
     file_dir = path.abspath(path.dirname(__file__))
     with open(path.join(file_dir, "test_data", input_file), "r", encoding="utf-8") as f:
         testing_html = f.read()
