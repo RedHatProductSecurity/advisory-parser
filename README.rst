@@ -34,7 +34,7 @@ Currently available parsers include:
 
     "Google Chrome", `<https://chromereleases.googleblog.com/2017/06/stable-channel-update-for-desktop_15.html>`_
     "Adobe Flash", `<https://helpx.adobe.com/security/products/flash-player/apsb17-17.html>`_
-    "Jenkins", ""
+    "Jenkins", `<https://www.jenkins.io/security/advisory/2023-04-12>`_
     "MySQL", `<http://www.oracle.com/technetwork/security-advisory/cpujul2017verbose-3236625.html>`_
     "phpMyAdmin", ""
     "Wireshark", ""
