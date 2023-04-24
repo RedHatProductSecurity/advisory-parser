@@ -1,0 +1,1229 @@
+<html lang="en" class="hydrated"><head>
+<title>
+Jenkins Security Advisory 2023-04-12
+</title>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<meta content="Jenkins – an open source automation server which enables developers around the world to reliably build, test, and deploy their software" name="description">
+<meta charset="utf-8"><style class="anchorjs"></style><style data-styles="">ion-icon{visibility:hidden}.hydrated{visibility:inherit}</style>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<meta content="ie=edge" http-equiv="x-ua-compatible">
+<link href="https://www.jenkins.io/security/advisory/2023-04-12/" rel="canonical">
+<!-- Favicons -->
+<link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+<link href="/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180">
+<link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
+<link href="/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
+<link href="/site.webmanifest" rel="manifest">
+<link color="#5bbad5" href="/safari-pinned-tab.svg" rel="mask-icon">
+<meta content="#2b5797" name="msapplication-TileColor">
+<meta content="#ffffff" name="theme-color">
+<meta content="Jenkins Security Advisory 2023-04-12" name="apple-mobile-web-app-title">
+<!-- Twitter Card data -->
+<meta content="summary_large_image" name="twitter:card">
+<meta content="@JenkinsCI" name="twitter:site">
+<meta content="Jenkins Security Advisory 2023-04-12" name="twitter:title">
+<meta content="Jenkins – an open source automation server which enables developers around the world to reliably build, test, and deploy their software" name="twitter:description">
+<meta content="@JenkinsCI" name="twitter:creator">
+<!-- Twitter Summary card images must be at least 120x120px -->
+<meta content="/images/logo-title-opengraph.png" name="twitter:image">
+<!-- Open Graph data -->
+<meta content="Jenkins Security Advisory 2023-04-12" property="og:title">
+<meta content="article" property="og:type">
+<meta content="https://www.jenkins.io/security/advisory/2023-04-12/" property="og:url">
+<meta content="Jenkins – an open source automation server which enables developers around the world to reliably build, test, and deploy their software" name="og:description">
+<meta content="Jenkins Security Advisory 2023-04-12" property="og:site_name">
+<meta content="/images/logo-title-opengraph.png" name="og:image">
+<link href="/assets/bower/bootstrap/css/bootstrap.min.css" media="screen" rel="stylesheet">
+<link href="/css/jenkins.css" media="screen" rel="stylesheet">
+<link href="/css/copy-to-clipboard.css" media="screen" rel="stylesheet">
+<link href="/stylesheets/styles.css" media="screen" rel="stylesheet">
+<!-- Non-obtrusive CSS styles -->
+<link href="/css/footer.css" media="screen" rel="stylesheet">
+<link href="/css/font-awesome.min.css" media="screen" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" media="all"><style type="text/css">.DocSearch-Container { top: 56px; }</style><script defer="" src="https://cdn.jsdelivr.net/npm/@docsearch/js@3"></script></head>
+<body>
+<script async="" src="//www.google-analytics.com/analytics.js"></script><script src="/assets/bower/jquery/jquery.min.js"></script>
+<script src="/js/copy-to-clipboard.js"></script>
+<jio-navbar class="fixed-nav" id="ji-toolbar" property="https://www.jenkins.io" showsearchbox=""></jio-navbar>
+
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    for (var i = 1 ; i <= 6 ; i ++) {
+      anchors.add('.container .row .col-lg-9 h' + i);
+    }
+  })
+</script>
+
+<div class="container">
+<div class="row body">
+<div class="col-lg-3">
+<div class="sidebar-nav tour">
+<p>
+<a href="/security/" class="">Jenkins Security Home</a>
+</p>
+<strong>
+For Administrators
+</strong>
+<ul>
+<li>
+<a href="/security/for-administrators/" class="">Overview</a>
+</li>
+<li>
+<a href="/security/advisories/" class="">Security Advisories</a>
+</li>
+<li>
+<a href="/security/scheduling/" class="">Advisory Schedule</a>
+</li>
+<li>
+<a href="/security/plugins/" class="">Vulnerabilities in Plugins</a>
+</li>
+<li>
+<a href="/security/fixing/" class="">How We Fix Security Issues</a>
+</li>
+</ul>
+<strong>
+For Reporters
+</strong>
+<ul>
+<li>
+<a href="/security/reporting/" class="">Reporting Vulnerabilities</a>
+</li>
+<li>
+<a href="/security/cna/" class="">Jenkins CNA</a>
+</li>
+</ul>
+<strong>
+For Maintainers
+</strong>
+<ul>
+<li>
+<a href="/security/for-maintainers/" class="">Overview</a>
+</li>
+<li>
+<a href="/security/plugins/" class="">Vulnerabilities in Plugins</a>
+</li>
+</ul>
+<strong>
+Jenkins Security Team
+</strong>
+<ul>
+<li>
+<a href="/security/team/" class="">About</a>
+</li>
+<li>
+<a href="/security/improvements/" class="">Contributions</a>
+</li>
+</ul>
+</div>
+</div>
+<div class="col-lg-9">
+<h1 id="jenkins-security-advisory-2023-04-12">
+Jenkins Security Advisory 2023-04-12
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#jenkins-security-advisory-2023-04-12" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h1>
+<p>
+This advisory announces vulnerabilities in the following Jenkins deliverables:
+</p>
+<p>
+</p><ul>
+<li>
+<a href="https://plugins.jenkins.io/assembla-merge-request-builder">
+Assembla merge request builder
+Plugin
+</a>
+</li>
+<li>
+<a href="https://plugins.jenkins.io/azure-keyvault">
+Azure Key Vault
+Plugin
+</a>
+</li>
+<li>
+<a href="https://plugins.jenkins.io/consul-kv-builder">
+Consul KV Builder
+Plugin
+</a>
+</li>
+<li>
+<a href="https://plugins.jenkins.io/fogbugz">
+Fogbugz
+Plugin
+</a>
+</li>
+<li>
+<a href="https://plugins.jenkins.io/image-tag-parameter">
+Image Tag Parameter
+Plugin
+</a>
+</li>
+<li>
+<a href="https://plugins.jenkins.io/kubernetes">
+Kubernetes
+Plugin
+</a>
+</li>
+<li>
+<a href="https://plugins.jenkins.io/lucene-search">
+Lucene-Search
+Plugin
+</a>
+</li>
+<li>
+<a href="https://plugins.jenkins.io/neuvector-vulnerability-scanner">
+NeuVector Vulnerability Scanner
+Plugin
+</a>
+</li>
+<li>
+<a href="https://plugins.jenkins.io/quayio-trigger">
+Quay.io trigger
+Plugin
+</a>
+</li>
+<li>
+<a href="https://plugins.jenkins.io/reportportal">
+Report Portal
+Plugin
+</a>
+</li>
+<li>
+<a href="https://plugins.jenkins.io/thycotic-devops-secrets-vault">
+Thycotic DevOps Secrets Vault
+Plugin
+</a>
+</li>
+<li>
+<a href="https://plugins.jenkins.io/thycotic-secret-server">
+Thycotic Secret Server
+Plugin
+</a>
+</li>
+<li>
+<a href="https://plugins.jenkins.io/spoonscript">
+TurboScript
+Plugin
+</a>
+</li>
+<li>
+<a href="https://plugins.jenkins.io/wso2id-oauth">
+WSO2 Oauth
+Plugin
+</a>
+</li>
+</ul>
+<p></p>
+<h2 id="descriptions">
+Descriptions
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#descriptions" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h2>
+<h3 id="SECURITY-3075">
+Improper masking of credentials in multiple plugins
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#SECURITY-3075" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h3>
+<strong>
+SECURITY-3075
+/
+CVE-2023-30513 (Kubernetes), CVE-2023-30514 (Azure Key Vault), CVE-2023-30515 (Thycotic DevOps Secrets Vault)
+</strong>
+<br>
+<strong>
+Severity (CVSS):
+</strong>
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N">
+Medium
+</a>
+<br>
+<strong>
+Affected plugins:
+<nobr>
+<a href="https://plugins.jenkins.io/kubernetes">
+<code>kubernetes</code>
+</a>
+,
+</nobr>
+<nobr>
+<a href="https://plugins.jenkins.io/azure-keyvault">
+<code>azure-keyvault</code>
+</a>
+,
+</nobr>
+<nobr>
+<a href="https://plugins.jenkins.io/thycotic-devops-secrets-vault">
+<code>thycotic-devops-secrets-vault</code>
+</a>
+</nobr>
+</strong>
+<br>
+<strong>
+Description:
+</strong>
+<div class="paragraph">
+<p>Multiple plugins do not properly mask (i.e., replace with asterisks) credentials printed in the build log from Pipeline steps like <code>sh</code> and <code>bat</code>, when both of the following conditions are met:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The credentials are printed in build steps executing on an agent (typically inside a <code>node</code> block).</p>
+</li>
+<li>
+<p>Push mode for durable task logging is enabled.
+This is a hidden option in <a href="https://plugins.jenkins.io/workflow-durable-task-step/">Pipeline: Nodes and Processes</a> that can be enabled through the <a href="https://www.jenkins.io/doc/book/managing/system-properties/">Java system property</a> <code>org.jenkinsci.plugins.workflow.steps.durable_task.DurableTaskStep.USE_WATCHING</code>.
+It is also automatically enabled by some plugins, e.g., <a href="https://plugins.jenkins.io/opentelemetry/">OpenTelemetry</a> and <a href="https://plugins.jenkins.io/pipeline-cloudwatch-logs/">Pipeline Logging over CloudWatch</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following plugins are affected by this vulnerability:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Kubernetes 3909.v1f2c633e8590 and earlier (SECURITY-3079 / CVE-2023-30513)</p>
+</li>
+<li>
+<p>Azure Key Vault 187.va_cd5fecd198a_ and earlier (SECURITY-3051 / CVE-2023-30514)</p>
+</li>
+<li>
+<p>Thycotic DevOps Secrets Vault 1.0.0 (SECURITY-3078 / CVE-2023-30515)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following plugins have been updated to properly mask credentials in the build log when push mode for durable task logging is enabled:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Kubernetes 3910.ve59cec5e33ea_ (SECURITY-3079 / CVE-2023-30513)</p>
+</li>
+<li>
+<p>Azure Key Vault 188.vf46b_7fa_846a_1 (SECURITY-3051 / CVE-2023-30514)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As of publication of this advisory, there is no fix available for the following plugin:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Thycotic DevOps Secrets Vault 1.0.0 (SECURITY-3078 / CVE-2023-30515)</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tbody><tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+An improvement in <a href="https://plugins.jenkins.io/credentials-binding/">Credentials Binding</a> 523.525.vb_72269281873 implements a workaround that applies build log masking even in affected plugins.
+This workaround is temporary and potentially incomplete, so it is still recommended that affected plugins be updated to resolve this issue.
+</td>
+</tr>
+</tbody></table>
+</div>
+<h3 id="SECURITY-2840">
+Disabled SSL/TLS certificate validation for existing configurations in Image Tag Parameter Plugin
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#SECURITY-2840" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h3>
+<strong>
+SECURITY-2840
+/
+CVE-2023-30516
+</strong>
+<br>
+<strong>
+Severity (CVSS):
+</strong>
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:N">
+Medium
+</a>
+<br>
+<strong>
+Affected plugin:
+<nobr>
+<a href="https://plugins.jenkins.io/image-tag-parameter">
+<code>image-tag-parameter</code>
+</a>
+</nobr>
+</strong>
+<br>
+<strong>
+Description:
+</strong>
+<div class="paragraph">
+<p>Image Tag Parameter Plugin 2.0 improperly introduces an option to opt out of SSL/TLS certificate validation when connecting to Docker registries.</p>
+</div>
+<div class="paragraph">
+<p>Job configurations using Image Tag Parameters that were created before 2.0 will have SSL/TLS certificate validation disabled by default.</p>
+</div>
+<div class="paragraph">
+<p>As of publication of this advisory, there is no fix.
+<a href="/security/plugins/#unresolved">Learn why we announce this.</a></p>
+</div>
+<h3 id="SECURITY-2841">
+SSL/TLS certificate validation unconditionally disabled by NeuVector Vulnerability Scanner Plugin
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#SECURITY-2841" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h3>
+<strong>
+SECURITY-2841
+/
+CVE-2023-30517
+</strong>
+<br>
+<strong>
+Severity (CVSS):
+</strong>
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:L/A:N">
+Medium
+</a>
+<br>
+<strong>
+Affected plugin:
+<nobr>
+<a href="https://plugins.jenkins.io/neuvector-vulnerability-scanner">
+<code>neuvector-vulnerability-scanner</code>
+</a>
+</nobr>
+</strong>
+<br>
+<strong>
+Description:
+</strong>
+<div class="paragraph">
+<p>NeuVector Vulnerability Scanner Plugin 1.22 and earlier unconditionally disables SSL/TLS certificate and hostname validation when connecting to a configured NeuVector Vulnerability Scanner server.</p>
+</div>
+<div class="paragraph">
+<p>As of publication of this advisory, there is no fix.
+<a href="/security/plugins/#unresolved">Learn why we announce this.</a></p>
+</div>
+<h3 id="SECURITY-2837">
+Missing permission check in Thycotic Secret Server Plugin allows enumerating credentials IDs
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#SECURITY-2837" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h3>
+<strong>
+SECURITY-2837
+/
+CVE-2023-30518
+</strong>
+<br>
+<strong>
+Severity (CVSS):
+</strong>
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N">
+Medium
+</a>
+<br>
+<strong>
+Affected plugin:
+<nobr>
+<a href="https://plugins.jenkins.io/thycotic-secret-server">
+<code>thycotic-secret-server</code>
+</a>
+</nobr>
+</strong>
+<br>
+<strong>
+Description:
+</strong>
+<div class="paragraph">
+<p>Thycotic Secret Server Plugin 1.0.2 and earlier does not perform a permission check in an HTTP endpoint.</p>
+</div>
+<div class="paragraph">
+<p>This allows attackers with Overall/Read permission to enumerate credentials IDs of credentials stored in Jenkins.
+Those can be used as part of an attack to capture the credentials using another vulnerability.</p>
+</div>
+<div class="paragraph">
+<p>As of publication of this advisory, there is no fix.
+<a href="/security/plugins/#unresolved">Learn why we announce this.</a></p>
+</div>
+<h3 id="SECURITY-2849">
+Lack of authentication mechanism in Quay.io trigger Plugin webhook
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#SECURITY-2849" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h3>
+<strong>
+SECURITY-2849
+/
+CVE-2023-30519
+</strong>
+<br>
+<strong>
+Severity (CVSS):
+</strong>
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N">
+Medium
+</a>
+<br>
+<strong>
+Affected plugin:
+<nobr>
+<a href="https://plugins.jenkins.io/quayio-trigger">
+<code>quayio-trigger</code>
+</a>
+</nobr>
+</strong>
+<br>
+<strong>
+Description:
+</strong>
+<div class="paragraph">
+<p>Quay.io trigger Plugin provides a webhook endpoint at <code>/quayio-webhook/</code> that can be used to trigger builds of jobs configured to use a specified repository.</p>
+</div>
+<div class="paragraph">
+<p>In Quay.io trigger Plugin 0.1 and earlier, this endpoint can be accessed without authentication.</p>
+</div>
+<div class="paragraph">
+<p>This allows unauthenticated attackers to trigger builds of jobs corresponding to the attacker-specified repository.</p>
+</div>
+<div class="paragraph">
+<p>As of publication of this advisory, there is no fix.
+<a href="/security/plugins/#unresolved">Learn why we announce this.</a></p>
+</div>
+<h3 id="SECURITY-2850">
+Stored XSS vulnerability in Quay.io trigger Plugin
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#SECURITY-2850" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h3>
+<strong>
+SECURITY-2850
+/
+CVE-2023-30520
+</strong>
+<br>
+<strong>
+Severity (CVSS):
+</strong>
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H">
+High
+</a>
+<br>
+<strong>
+Affected plugin:
+<nobr>
+<a href="https://plugins.jenkins.io/quayio-trigger">
+<code>quayio-trigger</code>
+</a>
+</nobr>
+</strong>
+<br>
+<strong>
+Description:
+</strong>
+<div class="paragraph">
+<p>Quay.io trigger Plugin 0.1 and earlier does not limit URL schemes for repository homepage URLs submitted via Quay.io trigger webhooks.</p>
+</div>
+<div class="paragraph">
+<p>This results in a stored cross-site scripting (XSS) vulnerability exploitable by attackers able to submit crafted Quay.io trigger webhook payloads.</p>
+</div>
+<div class="paragraph">
+<p>As of publication of this advisory, there is no fix.
+<a href="/security/plugins/#unresolved">Learn why we announce this.</a></p>
+</div>
+<h3 id="SECURITY-2872">
+Lack of authentication mechanism in Assembla merge request builder Plugin webhook
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#SECURITY-2872" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h3>
+<strong>
+SECURITY-2872
+/
+CVE-2023-30521
+</strong>
+<br>
+<strong>
+Severity (CVSS):
+</strong>
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N">
+Medium
+</a>
+<br>
+<strong>
+Affected plugin:
+<nobr>
+<a href="https://plugins.jenkins.io/assembla-merge-request-builder">
+<code>assembla-merge-request-builder</code>
+</a>
+</nobr>
+</strong>
+<br>
+<strong>
+Description:
+</strong>
+<div class="paragraph">
+<p>Assembla merge request builder Plugin provides a webhook endpoint at <code>/assembla-webhook/</code> that can be used to trigger builds of jobs configured to use a specified repository.</p>
+</div>
+<div class="paragraph">
+<p>In Assembla merge request builder Plugin 1.1.13 and earlier, this endpoint can be accessed without authentication.</p>
+</div>
+<div class="paragraph">
+<p>This allows unauthenticated attackers to trigger builds of jobs corresponding to the attacker-specified repository.</p>
+</div>
+<div class="paragraph">
+<p>As of publication of this advisory, there is no fix.
+<a href="/security/plugins/#unresolved">Learn why we announce this.</a></p>
+</div>
+<h3 id="SECURITY-2873">
+Lack of authentication mechanism in Fogbugz Plugin webhook
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#SECURITY-2873" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h3>
+<strong>
+SECURITY-2873
+/
+CVE-2023-30522
+</strong>
+<br>
+<strong>
+Severity (CVSS):
+</strong>
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:L/A:N">
+Medium
+</a>
+<br>
+<strong>
+Affected plugin:
+<nobr>
+<a href="https://plugins.jenkins.io/fogbugz">
+<code>fogbugz</code>
+</a>
+</nobr>
+</strong>
+<br>
+<strong>
+Description:
+</strong>
+<div class="paragraph">
+<p>Fogbugz Plugin provides a webhook endpoint at <code>/fbTrigger/</code> that can be used to trigger builds of any jobs.</p>
+</div>
+<div class="paragraph">
+<p>In Fogbugz Plugin 2.2.17 and earlier, this endpoint can be accessed by attackers with Item/Read permission, allowing them to trigger builds of jobs specified in a <code>jobname</code> request parameter.</p>
+</div>
+<div class="paragraph">
+<p>As of publication of this advisory, there is no fix.
+<a href="/security/plugins/#unresolved">Learn why we announce this.</a></p>
+</div>
+<h3 id="SECURITY-2945">
+Tokens stored and displayed in plain text by Report Portal Plugin
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#SECURITY-2945" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h3>
+<strong>
+SECURITY-2945
+/
+CVE-2023-30523 (storage), CVE-2023-30524 (masking)
+</strong>
+<br>
+<strong>
+Severity (CVSS):
+</strong>
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N">
+Medium
+</a>
+<br>
+<strong>
+Affected plugin:
+<nobr>
+<a href="https://plugins.jenkins.io/reportportal">
+<code>reportportal</code>
+</a>
+</nobr>
+</strong>
+<br>
+<strong>
+Description:
+</strong>
+<div class="paragraph">
+<p>Report Portal Plugin 0.5 and earlier stores ReportPortal access tokens unencrypted in job <code>config.xml</code> files on the Jenkins controller as part of its configuration.</p>
+</div>
+<div class="paragraph">
+<p>These tokens can be viewed by users with Item/Extended Read permission or access to the Jenkins controller file system.</p>
+</div>
+<div class="paragraph">
+<p>Additionally, the configuration form does not mask these tokens, increasing the potential for attackers to observe and capture them.</p>
+</div>
+<div class="paragraph">
+<p>As of publication of this advisory, there is no fix.
+<a href="/security/plugins/#unresolved">Learn why we announce this.</a></p>
+</div>
+<h3 id="SECURITY-2950">
+CSRF vulnerability and missing permission check in Report Portal Plugin
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#SECURITY-2950" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h3>
+<strong>
+SECURITY-2950
+/
+CVE-2023-30525 (CSRF), CVE-2023-30526 (missing permission check)
+</strong>
+<br>
+<strong>
+Severity (CVSS):
+</strong>
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:L/A:N">
+Medium
+</a>
+<br>
+<strong>
+Affected plugin:
+<nobr>
+<a href="https://plugins.jenkins.io/reportportal">
+<code>reportportal</code>
+</a>
+</nobr>
+</strong>
+<br>
+<strong>
+Description:
+</strong>
+<div class="paragraph">
+<p>Report Portal Plugin 0.5 and earlier does not perform a permission check in a method implementing form validation.</p>
+</div>
+<div class="paragraph">
+<p>This allows attackers with Overall/Read permission to connect to an attacker-specified URL using attacker-specified bearer token authentication.</p>
+</div>
+<div class="paragraph">
+<p>Additionally, this form validation method does not require POST requests, resulting in a cross-site request forgery (CSRF) vulnerability.</p>
+</div>
+<div class="paragraph">
+<p>As of publication of this advisory, there is no fix.
+<a href="/security/plugins/#unresolved">Learn why we announce this.</a></p>
+</div>
+<h3 id="SECURITY-2992">
+Client secret stored and displayed in plain text by WSO2 Oauth Plugin
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#SECURITY-2992" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h3>
+<strong>
+SECURITY-2992
+/
+CVE-2023-30527 (storage), CVE-2023-30528 (masking)
+</strong>
+<br>
+<strong>
+Severity (CVSS):
+</strong>
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N">
+Low
+</a>
+<br>
+<strong>
+Affected plugin:
+<nobr>
+<a href="https://plugins.jenkins.io/wso2id-oauth">
+<code>wso2id-oauth</code>
+</a>
+</nobr>
+</strong>
+<br>
+<strong>
+Description:
+</strong>
+<div class="paragraph">
+<p>WSO2 Oauth Plugin 1.0 and earlier stores the WSO2 Oauth client secret unencrypted in the global <code>config.xml</code> file on the Jenkins controller as part of its configuration.</p>
+</div>
+<div class="paragraph">
+<p>This client secret can be viewed by users with access to the Jenkins controller file system.</p>
+</div>
+<div class="paragraph">
+<p>Additionally, the global configuration form does not mask the WSO2 Oauth client secret, increasing the potential for attackers to observe and capture it.</p>
+</div>
+<div class="paragraph">
+<p>As of publication of this advisory, there is no fix.
+<a href="/security/plugins/#unresolved">Learn why we announce this.</a></p>
+</div>
+<h3 id="SECURITY-3013">
+CSRF vulnerability in Lucene-Search Plugin
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#SECURITY-3013" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h3>
+<strong>
+SECURITY-3013
+/
+CVE-2023-30529
+</strong>
+<br>
+<strong>
+Severity (CVSS):
+</strong>
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N">
+Medium
+</a>
+<br>
+<strong>
+Affected plugin:
+<nobr>
+<a href="https://plugins.jenkins.io/lucene-search">
+<code>lucene-search</code>
+</a>
+</nobr>
+</strong>
+<br>
+<strong>
+Description:
+</strong>
+<div class="paragraph">
+<p>Lucene-Search Plugin 387.v938a_ecb_f7fe9 and earlier does not require POST requests for an HTTP endpoint, resulting in a cross-site request forgery (CSRF) vulnerability.</p>
+</div>
+<div class="paragraph">
+<p>This vulnerability allows attackers to reindex the database.</p>
+</div>
+<div class="paragraph">
+<p>As of publication of this advisory, there is no fix.
+<a href="/security/plugins/#unresolved">Learn why we announce this.</a></p>
+</div>
+<h3 id="SECURITY-2944">
+Token stored and displayed in plain text by Consul KV Builder Plugin
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#SECURITY-2944" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h3>
+<strong>
+SECURITY-2944
+/
+CVE-2023-30530 (storage), CVE-2023-30531 (masking)
+</strong>
+<br>
+<strong>
+Severity (CVSS):
+</strong>
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N">
+Medium
+</a>
+<br>
+<strong>
+Affected plugin:
+<nobr>
+<a href="https://plugins.jenkins.io/consul-kv-builder">
+<code>consul-kv-builder</code>
+</a>
+</nobr>
+</strong>
+<br>
+<strong>
+Description:
+</strong>
+<div class="paragraph">
+<p>Consul KV Builder Plugin 2.0.13 and earlier stores the HashiCorp Consul ACL Token unencrypted in its global configuration file <code>org.jenkinsci.plugins.consulkv.GlobalConsulConfig.xml</code> on the Jenkins controller as part of its configuration.</p>
+</div>
+<div class="paragraph">
+<p>This token can be viewed by users with access to the Jenkins controller file system.</p>
+</div>
+<div class="paragraph">
+<p>Additionally, the global configuration form does not mask the token, increasing the potential for attackers to observe and capture it.</p>
+</div>
+<div class="paragraph">
+<p>As of publication of this advisory, there is no fix.
+<a href="/security/plugins/#unresolved">Learn why we announce this.</a></p>
+</div>
+<h3 id="SECURITY-2851">
+Lack of authentication mechanism in TurboScript Plugin webhook
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#SECURITY-2851" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h3>
+<strong>
+SECURITY-2851
+/
+CVE-2023-30532
+</strong>
+<br>
+<strong>
+Severity (CVSS):
+</strong>
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:L/A:N">
+Medium
+</a>
+<br>
+<strong>
+Affected plugin:
+<nobr>
+<a href="https://plugins.jenkins.io/spoonscript">
+<code>spoonscript</code>
+</a>
+</nobr>
+</strong>
+<br>
+<strong>
+Description:
+</strong>
+<div class="paragraph">
+<p>TurboScript Plugin provides a webhook endpoint at <code>/turbo-webhook/</code> that can be used to trigger builds of jobs configured to use a specified repository.</p>
+</div>
+<div class="paragraph">
+<p>In TurboScript Plugin 1.3 and earlier, this endpoint can be accessed by attackers with Item/Read permission to trigger builds of jobs corresponding to the attacker-specified repository.</p>
+</div>
+<div class="paragraph">
+<p>As of publication of this advisory, there is no fix.
+<a href="/security/plugins/#unresolved">Learn why we announce this.</a></p>
+</div>
+<h2 id="severity">
+Severity
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#severity" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h2>
+<ul>
+<li>
+SECURITY-2837:
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N">
+Medium
+</a>
+</li>
+<li>
+SECURITY-2840:
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:N">
+Medium
+</a>
+</li>
+<li>
+SECURITY-2841:
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:L/A:N">
+Medium
+</a>
+</li>
+<li>
+SECURITY-2849:
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N">
+Medium
+</a>
+</li>
+<li>
+SECURITY-2850:
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H">
+High
+</a>
+</li>
+<li>
+SECURITY-2851:
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:L/A:N">
+Medium
+</a>
+</li>
+<li>
+SECURITY-2872:
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N">
+Medium
+</a>
+</li>
+<li>
+SECURITY-2873:
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:L/A:N">
+Medium
+</a>
+</li>
+<li>
+SECURITY-2944:
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N">
+Medium
+</a>
+</li>
+<li>
+SECURITY-2945:
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N">
+Medium
+</a>
+</li>
+<li>
+SECURITY-2950:
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:L/A:N">
+Medium
+</a>
+</li>
+<li>
+SECURITY-2992:
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N">
+Low
+</a>
+</li>
+<li>
+SECURITY-3013:
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N">
+Medium
+</a>
+</li>
+<li>
+SECURITY-3075:
+<a href="https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N">
+Medium
+</a>
+</li>
+</ul>
+<h2 id="affected-versions">
+Affected Versions
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#affected-versions" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h2>
+<ul>
+<li>
+<strong>
+Assembla merge request builder
+Plugin
+</strong>
+up to and including
+1.1.13
+</li>
+<li>
+<strong>
+Azure Key Vault
+Plugin
+</strong>
+up to and including
+187.va_cd5fecd198a_
+</li>
+<li>
+<strong>
+Consul KV Builder
+Plugin
+</strong>
+up to and including
+2.0.13
+</li>
+<li>
+<strong>
+Fogbugz
+Plugin
+</strong>
+up to and including
+2.2.17
+</li>
+<li>
+<strong>
+Image Tag Parameter
+Plugin
+</strong>
+up to and including
+2.0
+</li>
+<li>
+<strong>
+Kubernetes
+Plugin
+</strong>
+up to and including
+3909.v1f2c633e8590
+</li>
+<li>
+<strong>
+Lucene-Search
+Plugin
+</strong>
+up to and including
+387.v938a_ecb_f7fe9
+</li>
+<li>
+<strong>
+NeuVector Vulnerability Scanner
+Plugin
+</strong>
+up to and including
+1.22
+</li>
+<li>
+<strong>
+Quay.io trigger
+Plugin
+</strong>
+up to and including
+0.1
+</li>
+<li>
+<strong>
+Report Portal
+Plugin
+</strong>
+up to and including
+0.5
+</li>
+<li>
+<strong>
+Thycotic DevOps Secrets Vault
+Plugin
+</strong>
+up to and including
+1.0.0
+</li>
+<li>
+<strong>
+Thycotic Secret Server
+Plugin
+</strong>
+up to and including
+1.0.2
+</li>
+<li>
+<strong>
+TurboScript
+Plugin
+</strong>
+up to and including
+1.3
+</li>
+<li>
+<strong>
+WSO2 Oauth
+Plugin
+</strong>
+up to and including
+1.0
+</li>
+</ul>
+<h2 id="fix">
+Fix
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#fix" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h2>
+<ul>
+<li>
+<strong>
+Azure Key Vault
+Plugin
+</strong>
+should be updated to version
+188.vf46b_7fa_846a_1
+</li>
+<li>
+<strong>
+Kubernetes
+Plugin
+</strong>
+should be updated to version
+3910.ve59cec5e33ea_
+</li>
+</ul>
+<p>
+These versions include fixes to the vulnerabilities described above. All prior versions are considered to be affected by these vulnerabilities unless otherwise indicated.
+</p>
+<p>
+As of publication of this advisory, no fixes are available for the following plugins:
+</p>
+<ul>
+<li>
+Assembla merge request builder
+Plugin
+</li>
+<li>
+Consul KV Builder
+Plugin
+</li>
+<li>
+Fogbugz
+Plugin
+</li>
+<li>
+Image Tag Parameter
+Plugin
+</li>
+<li>
+Lucene-Search
+Plugin
+</li>
+<li>
+NeuVector Vulnerability Scanner
+Plugin
+</li>
+<li>
+Quay.io trigger
+Plugin
+</li>
+<li>
+Report Portal
+Plugin
+</li>
+<li>
+Thycotic DevOps Secrets Vault
+Plugin
+</li>
+<li>
+Thycotic Secret Server
+Plugin
+</li>
+<li>
+TurboScript
+Plugin
+</li>
+<li>
+WSO2 Oauth
+Plugin
+</li>
+</ul>
+<p>
+<a href="/security/plugins/#unresolved">
+Learn why we announce these issues.
+</a>
+</p>
+<h2 id="credit">
+Credit
+<a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="" href="#credit" style="font: 1em / 1 anchorjs-icons; margin-left: 0.1875em; padding-right: 0.1875em; padding-left: 0.1875em;"></a></h2>
+<p>
+The Jenkins project would like to thank the reporters for discovering and
+<a href="/security/#reporting-vulnerabilities">
+reporting
+</a>
+these vulnerabilities:
+</p><ul>
+<li>
+<strong>
+CC Bomber, Kitri BoB
+</strong>
+for
+SECURITY-2944, SECURITY-2945
+</li>
+<li>
+<strong>
+Daniel Beck, CloudBees, Inc.
+</strong>
+for
+SECURITY-2837, SECURITY-2840, SECURITY-3013
+</li>
+<li>
+<strong>
+Kevin Guerroudj, CloudBees, Inc.
+</strong>
+for
+SECURITY-2849, SECURITY-2850, SECURITY-2851, SECURITY-2992
+</li>
+<li>
+<strong>
+Kevin Guerroudj, CloudBees, Inc. and Yaroslav Afenkin, CloudBees, Inc.
+</strong>
+for
+SECURITY-2873
+</li>
+<li>
+<strong>
+Pavel Nakonechnyi, Netcetera AG
+</strong>
+for
+SECURITY-2841
+</li>
+<li>
+<strong>
+Tim Jacomb
+</strong>
+for
+SECURITY-3075
+</li>
+<li>
+<strong>
+Yaroslav Afenkin, CloudBees, Inc.
+</strong>
+for
+SECURITY-2950
+</li>
+<li>
+<strong>
+Yaroslav Afenkin, CloudBees, Inc. and Kevin Guerroudj, CloudBees, Inc.
+</strong>
+for
+SECURITY-2872
+</li>
+</ul>
+<p></p>
+
+</div>
+</div>
+</div>
+
+
+<script src="/assets/bower/anchor-js/anchor.min.js"></script>
+<script src="/assets/bower/@popperjs/core/umd/popper.min.js"></script>
+<script src="/assets/bower/bootstrap/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lit@2.7.2/polyfill-support.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.8.0/webcomponents-loader.js"></script>
+<script data="ionicons" defer="" src="https://cdnjs.cloudflare.com/ajax/libs/ionicons/7.1.0/ionicons/ionicons.esm.js" type="module"></script>
+<script data="ionicons" defer="" nomodule="" src="https://cdnjs.cloudflare.com/ajax/libs/ionicons/7.1.0/ionicons/ionicons.js"></script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/@jenkinsci/jenkins-io-components/+esm" type="module"></script>
+<script defer="" nomodule="" src="https://cdn.jsdelivr.net/npm/@jenkinsci/jenkins-io-components/"></script>
+<jio-footer githubbranch="master" githubrepo="jenkins-infra/jenkins.io" property="https://www.jenkins.io" reportaproblemtemplate="4-bug.yml" sourcepath="content/security/advisory/2023-04-12.adoc"></jio-footer>
+<script>
+ (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-4216293-5', 'auto');
+ga('send', 'pageview');
+ga('set', 'anonymizeIp', true);
+
+</script>
+
+<script>
+  $(function(){
+    var $body = $(document.body);
+    $body.on("keydown", function(){
+      $body.removeClass("no-outline");
+    })
+  })
+</script>
+
+
+</body></html>
