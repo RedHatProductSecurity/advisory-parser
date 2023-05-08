@@ -7,7 +7,7 @@ from datetime import datetime
 
 from advisory_parser.exceptions import AdvisoryParserTextException
 from advisory_parser.flaw import Flaw
-from .utils import get_text_from_url, find_tag_by_text, CVE_REGEX, get_request
+from .utils import get_text_from_url, find_tag_by_text, CVE_REGEX, find_tag_by_id, get_request
 from cvss import CVSS3
 
 
@@ -26,7 +26,7 @@ def parse_jenkins_advisory(url):
         )
 
     # split it into chunks of advisories
-    advisories = re.split(r"\n(?=.*?\nSECURITY-\d+\n/\n)", advisory_text)[1:]
+    advisories = extract_advisories(url)
     if len(advisories) == 0:
         raise AdvisoryParserTextException("No security fixes found in {}".format(url))
 
@@ -133,3 +133,28 @@ def extract_fixes(url):
         version = list(fix.stripped_strings)[1].split("version")[1].strip()
         plugins_to_fix.setdefault(plugin, []).append(version)
     return plugins_to_fix
+
+
+def extract_advisories(url):
+    tag_list = find_tag_by_id(url, "h3", re.compile(r"SECURITY-\d+"))
+    # append end tag
+    tag_list.append(find_tag_by_text(url, "h2", re.compile(r"\s*Severity\s*")))
+
+    start, end = 0, 1
+    all_texts = []
+
+    while end < len(tag_list):
+        curr_text = ""
+        curr_tag = tag_list[start]
+        end_tag = tag_list[end]
+
+        while curr_tag != end_tag:
+            curr_text += curr_tag.get_text()
+            curr_tag = curr_tag.next_sibling
+
+        # Filter out blank lines and leading/trailing spaces
+        all_texts.append("\n".join(line.strip() for line in curr_text.splitlines() if line))
+        start = end
+        end += 1
+
+    return all_texts

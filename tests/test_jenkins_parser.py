@@ -13,6 +13,7 @@ from advisory_parser.parsers.jenkins import (
     parse_jenkins_advisory,
     extract_severity_to_cvss3_map,
     extract_fixes,
+    extract_advisories
 )
 
 
@@ -92,8 +93,7 @@ def test_parser(get_request):
         "accessed by attackers with Item/Read permission to trigger "
         "builds of jobs corresponding to the attacker-specified "
         "repository.\n"
-        "As of publication of this advisory, there is no fix.\n"
-        "Learn why we announce this.",
+        "As of publication of this advisory, there is no fix.",
         "from_url": "https://www.jenkins.io/security/advisory/2023-04-12/#SECURITY-2851",
         "fixed_in": {},
         "cvss2": None,
@@ -144,3 +144,11 @@ def test_extract_fixes(get_request):
         "Azure Key Vault": ["188.vf46b_7fa_846a_1"],
         "Kubernetes": ["3910.ve59cec5e33ea_"],
     }
+
+
+@patch("advisory_parser.parsers.jenkins.get_request")
+def test_extract_advisories(get_request):
+    get_request.return_value = load_test_data("jenkins_2023-04-12.html")
+    url = "https://www.jenkins.io/security/advisory/2023-04-12/"
+    advisories = extract_advisories(url)
+    assert len(advisories) == 14

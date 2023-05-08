@@ -53,3 +53,9 @@ def find_tag_by_text(url, tag, text):
     html = get_request(url)
     soup = BeautifulSoup(html, "html.parser")
     return soup.find(tag, text=text)
+
+
+def find_tag_by_id(url, tag, tag_id):
+    html = get_request(url)
+    soup = BeautifulSoup(html, "html.parser")
+    return soup.findAll(tag, id=tag_id)
