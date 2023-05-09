@@ -7,12 +7,19 @@ from datetime import datetime
 
 from advisory_parser.exceptions import AdvisoryParserTextException
 from advisory_parser.flaw import Flaw
-from .utils import get_text_from_url, find_tag_by_text, CVE_REGEX, find_tag_by_id, get_request
+from .utils import find_tag_by_text, CVE_REGEX, find_tag_by_id, get_request
 from cvss import CVSS3
+
+TO_RH_SEVERITY = {
+    "None": "low",
+    "Low": "low",
+    "Medium": "moderate",
+    "High": "important",
+    "Critical": "critical"
+}
 
 
 def parse_jenkins_advisory(url):
-    advisory_text = get_text_from_url(url)
     severity_to_cvss3_map = extract_severity_to_cvss3_map(url)
     fixes = extract_fixes(url)
 
@@ -44,8 +51,8 @@ def parse_jenkins_advisory(url):
 
         from_url = url + "#" + severity
         summary = advisory.strip().split("\n")[0].strip()
-        impact = re.search(r"(High|Medium|Low)", advisory).group(1)
-        cvss3 = severity_to_cvss3_map[severity]
+        impact = severity_to_cvss3_map[severity]["impact"]
+        cvss3 = severity_to_cvss3_map[severity]["score"]
         description = extract_description(advisory, index == len(advisories) - 1)
         affected_plugins_fix = extract_affected_plugins_fixes(
             advisory, fixes, summary, description, severity, warnings
@@ -118,7 +125,11 @@ def extract_severity_to_cvss3_map(url):
         css3_vector = c.findNext().attrs["href"].split("#")[-1]
 
         # severity contains a colon at the end so have to remove that
-        severity_to_cvss3_map[severity[:-1]] = CVSS3(css3_vector).rh_vector()
+        score = CVSS3(css3_vector)
+        severity_to_cvss3_map[severity[:-1]] = {
+            "score": score.rh_vector(),
+            "impact": TO_RH_SEVERITY[score.severities()[0]]
+        }
 
     return severity_to_cvss3_map
 
