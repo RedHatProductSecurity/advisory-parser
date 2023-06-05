@@ -39,7 +39,7 @@ def parse_jenkins_advisory(url):
 
     flaws, warnings = [], []
     for index, advisory in enumerate(advisories):
-        severity = re.search(r"(SECURITY-\d+)", advisory).group(1)
+        severity = re.search(r"(SECURITY-\d+(\s\(\d\))?)", advisory).group(1)
         if severity not in severity_to_cvss3_map.keys():
             warnings.append("Could not find impact or cvss; skipping: {}".format(severity))
             continue
@@ -80,7 +80,7 @@ def extract_description(advisory, is_last):
     # if it is last advisory then we have to remove more stuff from description
     if is_last:
         description = description.split("Severity\n")[0].strip()
-    return description
+    return f"jenkins-plugin: {description}"
 
 
 def extract_affected_plugins_fixes(advisory, fixes, summary, description, severity, warnings):
