@@ -36,7 +36,8 @@ def test_parser(get_request):
 
     assert len(flaws) == 14
     assert vars(flaws[0]) == {
-        "summary": "Improper masking of credentials in multiple plugins",
+        "summary": "jenkins-plugin: kubernetes, azure-keyvault, thycotic-devops-secrets-vault: "
+                   "Improper masking of credentials in multiple plugins",
         "cvss3": "4.3/CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
         "description": "Multiple plugins do not properly mask (i.e., replace with "
         "asterisks) credentials printed in the build log from Pipeline "
@@ -84,7 +85,7 @@ def test_parser(get_request):
     }
 
     assert vars(flaws[-1]) == {
-        "summary": "Lack of authentication mechanism in TurboScript Plugin webhook",
+        "summary": "jenkins-plugin: spoonscript: Lack of authentication mechanism in TurboScript Plugin webhook",
         "cvss3": "4.3/CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:L/A:N",
         "description": "TurboScript Plugin provides a webhook endpoint at "
         "/turbo-webhook/ that can be used to trigger builds of jobs "

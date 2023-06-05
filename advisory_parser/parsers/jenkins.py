@@ -54,15 +54,16 @@ def parse_jenkins_advisory(url):
         impact = severity_to_cvss3_map[severity]["impact"]
         cvss3 = severity_to_cvss3_map[severity]["score"]
         description = extract_description(advisory, index == len(advisories) - 1)
+        affected_plugins = extract_affected_plugins(advisory)
         affected_plugins_fix = extract_affected_plugins_fixes(
-            advisory, fixes, summary, description, severity, warnings
+            affected_plugins, fixes, summary, description, severity, warnings
         )
 
         flaws.append(
             Flaw(
                 from_url=from_url,
                 cves=cves,
-                summary=summary,
+                summary=f"jenkins-plugin: {', '.join(affected_plugins)}: {summary}",
                 public_date=public_date,
                 cvss3=cvss3,
                 impact=impact,
@@ -80,17 +81,20 @@ def extract_description(advisory, is_last):
     # if it is last advisory then we have to remove more stuff from description
     if is_last:
         description = description.split("Severity\n")[0].strip()
-    return f"jenkins-plugin: {description}"
+    return description
 
 
-def extract_affected_plugins_fixes(advisory, fixes, summary, description, severity, warnings):
-    affected_plugins = [
+def extract_affected_plugins(advisory):
+    return [
         a.strip()
         for a in re.search(r"Affected plugins?:\n((.*\n)*?.*?)\nDescription", advisory)
         .group(1)
         .strip()
         .split(",")
     ]
+
+
+def extract_affected_plugins_fixes(affected_plugins, fixes, summary, description, severity, warnings):
     affected_plugins_fixes = {}
     for fix in fixes:
         if (
