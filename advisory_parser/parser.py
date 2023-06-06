@@ -32,8 +32,8 @@ class Parser:
         elif "oracle.com" in url:
             return parse_mysql_advisory(url)
 
-        elif "jenkins-ci" in url:
-            pass
+        elif "jenkins.io" in url:
+            return parse_jenkins_advisory(url)
 
         elif "phpmyadmin" in url:
             pass

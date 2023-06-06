@@ -8,7 +8,7 @@ from setuptools import setup
 with open("README.rst", "r") as f:
     description = f.read()
 
-requires = ["beautifulsoup4>=4.0.0"]
+requires = ["beautifulsoup4>=4.0.0", "cvss>=2.0"]
 
 setup(
     name="advisory-parser",
