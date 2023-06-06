@@ -15,7 +15,7 @@ TO_RH_SEVERITY = {
     "Low": "low",
     "Medium": "moderate",
     "High": "important",
-    "Critical": "critical"
+    "Critical": "critical",
 }
 
 
@@ -94,7 +94,9 @@ def extract_affected_plugins(advisory):
     ]
 
 
-def extract_affected_plugins_fixes(affected_plugins, fixes, summary, description, severity, warnings):
+def extract_affected_plugins_fixes(
+    affected_plugins, fixes, summary, description, severity, warnings
+):
     affected_plugins_fixes = {}
     for fix in fixes:
         if (
@@ -132,7 +134,7 @@ def extract_severity_to_cvss3_map(url):
         score = CVSS3(css3_vector)
         severity_to_cvss3_map[severity[:-1]] = {
             "score": score.rh_vector(),
-            "impact": TO_RH_SEVERITY[score.severities()[0]]
+            "impact": TO_RH_SEVERITY[score.severities()[0]],
         }
 
     return severity_to_cvss3_map

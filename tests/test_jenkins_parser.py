@@ -13,7 +13,7 @@ from advisory_parser.parsers.jenkins import (
     parse_jenkins_advisory,
     extract_severity_to_cvss3_map,
     extract_fixes,
-    extract_advisories
+    extract_advisories,
 )
 
 
@@ -37,7 +37,7 @@ def test_parser(get_request):
     assert len(flaws) == 14
     assert vars(flaws[0]) == {
         "summary": "jenkins-plugin: kubernetes, azure-keyvault, thycotic-devops-secrets-vault: "
-                   "Improper masking of credentials in multiple plugins",
+        "Improper masking of credentials in multiple plugins",
         "cvss3": "4.3/CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
         "description": "Multiple plugins do not properly mask (i.e., replace with "
         "asterisks) credentials printed in the build log from Pipeline "
@@ -122,60 +122,60 @@ def test_extract_severity_to_cvss3_map(get_request):
     assert impact_to_cvss3_map == {
         "SECURITY-2837": {
             "score": "4.3/CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
-            "impact": "moderate"
+            "impact": "moderate",
         },
         "SECURITY-2840": {
             "score": "5.3/CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:N",
-            "impact": "moderate"
+            "impact": "moderate",
         },
         "SECURITY-2841": {
             "score": "5.9/CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:L/A:N",
-            "impact": "moderate"
+            "impact": "moderate",
         },
         "SECURITY-2849": {
             "score": "5.3/CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
-            "impact": "moderate"
+            "impact": "moderate",
         },
         "SECURITY-2850": {
             "score": "8.8/CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
-            "impact": "important"
+            "impact": "important",
         },
         "SECURITY-2851": {
             "score": "4.3/CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:L/A:N",
-            "impact": "moderate"
+            "impact": "moderate",
         },
         "SECURITY-2872": {
             "score": "5.3/CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
-            "impact": "moderate"
+            "impact": "moderate",
         },
         "SECURITY-2873": {
             "score": "4.3/CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:L/A:N",
-            "impact": "moderate"
+            "impact": "moderate",
         },
         "SECURITY-2944": {
             "score": "4.3/CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
-            "impact": "moderate"
+            "impact": "moderate",
         },
         "SECURITY-2945": {
             "score": "4.3/CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
-            "impact": "moderate"
+            "impact": "moderate",
         },
         "SECURITY-2950": {
             "score": "4.3/CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:L/A:N",
-            "impact": "moderate"
+            "impact": "moderate",
         },
         "SECURITY-2992": {
             "score": "3.3/CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
-            "impact": "low"
+            "impact": "low",
         },
         "SECURITY-3013": {
             "score": "4.3/CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N",
-            "impact": "moderate"
+            "impact": "moderate",
         },
         "SECURITY-3075": {
             "score": "4.3/CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
-            "impact": "moderate"
-        }
+            "impact": "moderate",
+        },
     }
 
 
