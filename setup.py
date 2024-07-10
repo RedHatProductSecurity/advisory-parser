@@ -12,7 +12,7 @@ requires = ["beautifulsoup4>=4.0.0", "cvss>=2.0"]
 
 setup(
     name="advisory-parser",
-    version="1.12",
+    version="1.13",
     description="Security flaw parser for upstream security advisories",
     long_description=description,
     url="https://github.com/RedHatProductSecurity/advisory-parser",
