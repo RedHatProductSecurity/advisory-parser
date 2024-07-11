@@ -8,26 +8,40 @@ try:
 except ImportError:
     from mock import patch
 
-from advisory_parser.parsers.mysql import parse_mysql_advisory, _nearest_tuesday
+from advisory_parser.parsers.mysql import parse_mysql_advisory, _nearest_tuesday, _third_tuesday
 
 
 @pytest.mark.parametrize(
     "year, month, day, expected_date",
     [
-        (2017, "jul", 3, datetime(2017, 7, 4)),
-        (2017, "jul", 4, datetime(2017, 7, 4)),  # Tuesday
-        (2017, "jul", 5, datetime(2017, 7, 4)),
-        (2017, "jul", 6, datetime(2017, 7, 4)),
-        (2017, "jul", 7, datetime(2017, 7, 4)),
-        (2017, "jul", 8, datetime(2017, 7, 11)),
-        (2017, "jul", 9, datetime(2017, 7, 11)),
-        (2017, "jul", 10, datetime(2017, 7, 11)),
-        (2017, "jul", 11, datetime(2017, 7, 11)),  # Tuesday
-        (2017, "jul", 12, datetime(2017, 7, 11)),
+        (2017, 7, 3, datetime(2017, 7, 4)),
+        (2017, 7, 4, datetime(2017, 7, 4)),  # Tuesday
+        (2017, 7, 5, datetime(2017, 7, 4)),
+        (2017, 7, 6, datetime(2017, 7, 4)),
+        (2017, 7, 7, datetime(2017, 7, 4)),
+        (2017, 7, 8, datetime(2017, 7, 11)),
+        (2017, 7, 9, datetime(2017, 7, 11)),
+        (2017, 7, 10, datetime(2017, 7, 11)),
+        (2017, 7, 11, datetime(2017, 7, 11)),  # Tuesday
+        (2017, 7, 12, datetime(2017, 7, 11)),
     ],
 )
 def test_nearest_tuesday(year, month, day, expected_date):
     assert expected_date == _nearest_tuesday(year, month, day)
+
+
+@pytest.mark.parametrize(
+    "year, month, expected_date",
+    [
+        (2017, 7, datetime(2017, 7, 18).date()),
+        (2024, 7, datetime(2024, 7, 16).date()),
+        (2024, 10, datetime(2024, 10, 15).date()),
+        (2025, 1, datetime(2025, 1, 21).date()),
+        (2025, 4, datetime(2025, 4, 15).date()),
+    ],
+)
+def test_third_tuesday(year, month, expected_date):
+    assert expected_date == _third_tuesday(year, month)
 
 
 @patch("advisory_parser.parsers.mysql.get_request")

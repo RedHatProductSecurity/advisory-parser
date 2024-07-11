@@ -2,6 +2,7 @@
 # Author: Martin Prpič, Red Hat Product Security
 # License: LGPLv3+
 
+import calendar
 import re
 from datetime import datetime, timedelta
 
@@ -14,6 +15,21 @@ from .utils import get_request, get_text_from_url, CVE_REGEX
 MARIADB_VULN_PAGE = "https://mariadb.com/kb/en/security/"
 VERSION_REGEX = re.compile(r"(\d\d?\.\d\.\d\d?)")
 
+month_to_num = {
+    "jan": 1,
+    "feb": 2,
+    "mar": 3,
+    "apr": 4,
+    "may": 5,
+    "jun": 6,
+    "jul": 7,
+    "aug": 8,
+    "sep": 9,
+    "oct": 10,
+    "nov": 11,
+    "dec": 12,
+}
+
 
 def _nearest_tuesday(year, month, day=17):
     """For a given year and month, return nearest Tuesday to the 17th of that month
@@ -24,25 +40,8 @@ def _nearest_tuesday(year, month, day=17):
     July and October."
     [https://www.oracle.com/security-alerts/]
     """
-    month_to_num = {
-        "jan": 1,
-        "feb": 2,
-        "mar": 3,
-        "apr": 4,
-        "may": 5,
-        "jun": 6,
-        "jul": 7,
-        "aug": 8,
-        "sep": 9,
-        "oct": 10,
-        "nov": 11,
-        "dec": 12,
-    }
 
-    if month.lower() not in month_to_num:
-        raise AdvisoryParserTextException("Invalid month parsed from advisory URL:", str(month))
-
-    base_date = datetime(year, month_to_num[month.lower()], day)
+    base_date = datetime(year, month, day)
 
     previous_tuesday = base_date - timedelta(days=((base_date.weekday() + 6) % 7))
     next_tuesday = base_date + timedelta(days=((1 - base_date.weekday()) % 7))
@@ -52,6 +51,34 @@ def _nearest_tuesday(year, month, day=17):
         if next_tuesday - base_date < base_date - previous_tuesday
         else previous_tuesday
     )
+
+
+def _third_tuesday(year, month):
+    """For a given year and month, return the 3rd Tuesday of that month
+
+    "Critical Patch Updates provide security patches for supported Oracle on-premises products.
+    They are available to customers with valid support contracts. Starting in April 2022,
+    Critical Patch Updates are released on the third Tuesday of January, April, July, and October
+    (They were previously published on the Tuesday closest to the 17th day of January, April, July,
+     and October). The next four dates are:
+
+    16 July 2024
+    15 October 2024
+    21 January 2025
+    15 April 2025
+    "
+    [https://www.oracle.com/security-alerts/]
+    """
+
+    c = calendar.Calendar()
+    monthcal = c.monthdatescalendar(year, month)
+    third_tuesday = [
+        day
+        for week in monthcal
+        for day in week
+        if day.weekday() == calendar.TUESDAY and day.month == month
+    ][2]
+    return third_tuesday
 
 
 def create_mariadb_cve_map():
@@ -98,7 +125,20 @@ def parse_mysql_advisory(url):
     # Extract the CPU's month and year from the URL since the verbose page has
     # no dates on it
     month, year = url_match.groups()
-    cpu_date = _nearest_tuesday(int(year), month)
+    if month.lower() not in month_to_num:
+        raise AdvisoryParserTextException("Invalid month parsed from advisory URL:", str(month))
+    month_num = month_to_num[month.lower()]
+    year_int = int(year)
+    # Starting in April 2022, Critical Patch Updates are released on the third Tuesday of January,
+    # April, July, and October (They were previously published on the Tuesday closest to the 17th
+    # day of January, April, July, and October).
+    # [https://www.oracle.com/security-alerts/]
+    if year_int < 2022:
+        cpu_date = _nearest_tuesday(year_int, month_num)
+    elif year_int == 2022 and month_num < 4:
+        cpu_date = _nearest_tuesday(year_int, month_num)
+    else:
+        cpu_date = _third_tuesday(year_int, month_num)
     advisory_id = "CPU {} {}".format(month.capitalize(), year)
 
     # Fetch the CPU verbose page
