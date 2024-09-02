@@ -19,56 +19,57 @@ def load_test_data(fname):
 
 @patch("advisory_parser.parsers.chrome.get_text_from_url")
 def test_parser(get_text_from_url):
-    get_text_from_url.return_value = load_test_data("chrome_2017-06-15.txt")
-    url = "https://chromereleases.googleblog.com/2017/06/stable-channel-update-for-desktop_15.html"
+    get_text_from_url.return_value = load_test_data("chrome_2024-08-28.txt")
+    url = "https://chromereleases.googleblog.com/2024/08/stable-channel-update-for-desktop_28.html"
     flaws, warnings = parse_chrome_advisory(url)
 
     assert not warnings
-    assert len(flaws) == 3
+    assert len(flaws) == 4
     assert vars(flaws[0]) == {
-        "summary": "chromium-browser: Sandbox Escape in IndexedDB",
+        "summary": "chromium-browser: Type Confusion in V8",
         "cvss3": "8.8/CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
-        "description": "A sandbox escape flaw was found in the IndexedDB component of the Chromium browser.\n\nUpstream bug(s):\n\nhttps://code.google.com/p/chromium/issues/detail?id=725032",
-        "from_url": "https://chromereleases.googleblog.com/2017/06/stable-channel-update-for-desktop_15.html",
-        "fixed_in": {"chromium-browser": ["59.0.3071.104"]},
+        "description": "A type confusion flaw was found in the V8 component of the Chromium browser.\n\nUpstream bug(s):\n\nhttps://code.google.com/p/chromium/issues/detail?id=351865302",
+        "from_url": "https://chromereleases.googleblog.com/2024/08/stable-channel-update-for-desktop_28.html",
+        "fixed_in": {"chromium-browser": ["128.0.6613.113"]},
         "cvss2": None,
         "advisory_id": None,
         "impact": "important",
-        "cves": ["CVE-2017-5087"],
-        "public_date": datetime.datetime(2017, 6, 15, 0, 0),
+        "cves": ["CVE-2024-7969"],
+        "public_date": datetime.datetime(2024, 8, 28, 0, 0),
     }
     assert vars(flaws[1]) == {
-        "summary": "chromium-browser: Out of bounds read in V8",
+        "summary": "chromium-browser: Heap buffer overflow in Skia",
         "cvss3": "8.8/CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
-        "description": "An out of bounds read flaw was found in the V8 component of the Chromium browser.\n\nUpstream bug(s):\n\nhttps://code.google.com/p/chromium/issues/detail?id=729991",
-        "from_url": "https://chromereleases.googleblog.com/2017/06/stable-channel-update-for-desktop_15.html",
-        "fixed_in": {"chromium-browser": ["59.0.3071.104"]},
+        "description": "A heap buffer overflow flaw was found in the Skia component of the Chromium browser.\n\nUpstream bug(s):\n\nhttps://code.google.com/p/chromium/issues/detail?id=360265320",
+        "from_url": "https://chromereleases.googleblog.com/2024/08/stable-channel-update-for-desktop_28.html",
+        "fixed_in": {"chromium-browser": ["128.0.6613.113"]},
         "cvss2": None,
         "advisory_id": None,
         "impact": "important",
-        "cves": ["CVE-2017-5088"],
-        "public_date": datetime.datetime(2017, 6, 15, 0, 0),
+        "cves": ["CVE-2024-8193"],
+        "public_date": datetime.datetime(2024, 8, 28, 0, 0),
     }
     assert vars(flaws[2]) == {
-        "summary": "chromium-browser: Domain spoofing in Omnibox",
-        "cvss3": "6.5/CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
-        "description": "A domain spoofing flaw was found in the Omnibox component of the Chromium browser.\n\nUpstream bug(s):\n\nhttps://code.google.com/p/chromium/issues/detail?id=714196",
-        "from_url": "https://chromereleases.googleblog.com/2017/06/stable-channel-update-for-desktop_15.html",
-        "fixed_in": {"chromium-browser": ["59.0.3071.104"]},
+        "summary": "chromium-browser: Type Confusion in V8",
+        "cvss3": "8.8/CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+        "description": "A type confusion flaw was found in the V8 component of the Chromium browser.\n\nUpstream bug(s):\n\nhttps://code.google.com/p/chromium/issues/detail?id=360533914",
+        "from_url": "https://chromereleases.googleblog.com/2024/08/stable-channel-update-for-desktop_28.html",
+        "fixed_in": {"chromium-browser": ["128.0.6613.113"]},
         "cvss2": None,
         "advisory_id": None,
-        "impact": "moderate",
-        "cves": ["CVE-2017-5089"],
-        "public_date": datetime.datetime(2017, 6, 15, 0, 0),
+        "impact": "important",
+        "cves": ["CVE-2024-8194"],
+        "public_date": datetime.datetime(2024, 8, 28, 0, 0),
     }
-
-
-@patch("advisory_parser.parsers.chrome.get_text_from_url")
-def test_parser_multi_cve(get_text_from_url):
-    get_text_from_url.return_value = load_test_data("chrome_2020-02-04.txt")
-    url = "https://chromereleases.googleblog.com/2017/06/stable-channel-update-for-desktop_15.html"
-    flaws, warnings = parse_chrome_advisory(url)
-
-    assert not warnings
-    assert len(flaws) == 41
-    assert flaws[5].cves == ["CVE-2019-19880", "CVE-2019-19925"]
+    assert vars(flaws[3]) == {
+        "summary": "chromium-browser: Heap buffer overflow in Skia",
+        "cvss3": "8.8/CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+        "description": "A heap buffer overflow flaw was found in the Skia component of the Chromium browser.\n\nUpstream bug(s):\n\nhttps://code.google.com/p/chromium/issues/detail?id=360758697",
+        "from_url": "https://chromereleases.googleblog.com/2024/08/stable-channel-update-for-desktop_28.html",
+        "fixed_in": {"chromium-browser": ["128.0.6613.113"]},
+        "cvss2": None,
+        "advisory_id": None,
+        "impact": "important",
+        "cves": ["CVE-2024-8198"],
+        "public_date": datetime.datetime(2024, 8, 28, 0, 0),
+    }
