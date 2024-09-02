@@ -22,15 +22,11 @@ CVSS3_MAP = {
 def parse_chrome_advisory(url):
     advisory_text = get_text_from_url(url)
 
-    # Workaround for advisories that do not use <div>s for each CVE entry. E.g.:
-    # https://chromereleases.googleblog.com/2018/04/stable-channel-update-for-desktop.html
-    advisory_text = re.sub(r"(.)\[\$", r"\1\n[$", advisory_text)
-
     if "Security Fixes" not in advisory_text:
         raise AdvisoryParserTextException("No security fixes found in {}".format(url))
 
     # Throw away parts of the text after the blog post
-    flaws_text = advisory_text.split("Labels:\nStable updates")[0].strip()
+    flaws_text = advisory_text.split("Labels:\nDesktop Update")[0].strip()
 
     # Parse out public date
     match = re.search("^Stable Channel Update for Desktop\n(.+)", flaws_text, re.MULTILINE)
@@ -50,15 +46,27 @@ def parse_chrome_advisory(url):
     except ValueError:
         raise AdvisoryParserTextException("Could not find fixed-in version in {}".format(url))
 
-    # Filter out lines that contain CVEs
-    cve_lines = [line.strip() for line in flaws_text.split("\n") if CVE_REGEX.search(line)]
+    # There is no newline character between Flaw descriptions. We use '[TBD][123456]' to delimit.
+    cve_lines = []
+    bug_ids = []
+    matches = list(re.finditer(r"\[[A-Z]+\]\[(\d{6,})\]", flaws_text))
+    no_of_matches = len(matches)
+    for match_index in range(no_of_matches - 1):
+        bug_ids.append(matches[match_index].group(1))
+        cve_lines.append(flaws_text[matches[match_index].end() : matches[match_index + 1].start()])
+    cve_lines.append(flaws_text[matches[no_of_matches - 1].end() :])
+    bug_ids.append(matches[no_of_matches - 1].group(1))
     if not cve_lines:
         raise AdvisoryParserTextException("Could not find any CVEs in {}".format(url))
 
+    if len(cve_lines) != len(bug_ids):
+        raise AdvisoryParserTextException("Number of CVE IDs did not match the number of bug IDs")
+
     flaws, warnings = [], []
+    line_index = 0
     for line in cve_lines:
         # Parse each line containing information about a CVE, e.g.:
-        # [$7500][590275] High CVE-2016-1652: XSS in X. Credit to anonymous.
+        # High CVE-2016-1652: XSS in X. Credit to anonymous.
         # First, split into two groups by first encountered colon.
         metadata, text = line.split(":", maxsplit=1)
         if not metadata or not text:
@@ -66,7 +74,7 @@ def parse_chrome_advisory(url):
             continue
 
         # If a line contains Various, it describes internal fixes, e.g.:
-        # [563930] CVE-2015-6787: Various fixes from internal audits...
+        # CVE-2015-6787: Various fixes from internal audits...
         if "Various" in text:
             impact = "important"
         else:
@@ -81,10 +89,9 @@ def parse_chrome_advisory(url):
             impact = impact.replace("high", "important")
             impact = impact.replace("medium", "moderate")
 
-        bug_ids = re.findall(r"\d{6,}", metadata)
         cves = CVE_REGEX.findall(metadata)
-        if not bug_ids and not cves:
-            warnings.append("Could not find CVEs or bugs; skipping: {}".format(line))
+        if not cves:
+            warnings.append("Could not find CVEs skipping: {}".format(line))
             continue
 
         summary = text.split(".")[0].strip()
@@ -109,8 +116,9 @@ def parse_chrome_advisory(url):
         summary = "chromium-browser: " + summary
 
         description += "\n\nUpstream bug(s):\n"
-        for bug in bug_ids:
-            description += "\nhttps://code.google.com/p/chromium/issues/detail?id=" + bug
+        description += "\nhttps://code.google.com/p/chromium/issues/detail?id="
+        description += bug_ids[line_index]
+        line_index += 1
 
         com_url = (
             url if "blogspot.com" in url else re.sub(r"blogspot\.[^/]*/", "blogspot.com/", url)
