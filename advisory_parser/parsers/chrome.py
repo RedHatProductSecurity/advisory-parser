@@ -3,11 +3,14 @@
 # License: LGPLv3+
 
 import re
+import logging
 from datetime import datetime
 
 from advisory_parser.exceptions import AdvisoryParserTextException
 from advisory_parser.flaw import Flaw
 from .utils import get_text_from_url, CVE_REGEX
+
+logger = logging.getLogger(__name__)
 
 # Chromium does not publish CVSS scores with their CVEs so these values are
 # best-effort guesses based on impact.
@@ -18,6 +21,13 @@ CVSS3_MAP = {
     "low": "4.3/CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:L",
 }
 
+# Constants for Chrome advisory parsing
+SECURITY_FIXES_HEADER = "Security Fixes"
+LABELS_FOOTER = "Labels:\nStable updates"
+DATE_FORMAT = "%A, %B %d, %Y"
+CHROME_VERSION_REGEX = r"\d{2,3}\.\d\.\d{4}\.\d{2,3}"
+CHROMIUM_ISSUE_BASE_URL = "https://code.google.com/p/chromium/issues/detail?id="
+
 
 def parse_chrome_advisory(url):
     advisory_text = get_text_from_url(url)
@@ -26,11 +36,11 @@ def parse_chrome_advisory(url):
     # https://chromereleases.googleblog.com/2018/04/stable-channel-update-for-desktop.html
     advisory_text = re.sub(r"(.)\[", r"\1\n[", advisory_text)
 
-    if "Security Fixes" not in advisory_text:
+    if SECURITY_FIXES_HEADER not in advisory_text:
         raise AdvisoryParserTextException("No security fixes found in {}".format(url))
 
     # Throw away parts of the text after the blog post
-    flaws_text = advisory_text.split("Labels:\nStable updates")[0].strip()
+    flaws_text = advisory_text.split(LABELS_FOOTER)[0].strip()
 
     # Parse out public date
     match = re.search("^Stable Channel Update for Desktop\n(.+)", flaws_text, re.MULTILINE)
@@ -38,7 +48,7 @@ def parse_chrome_advisory(url):
         raise AdvisoryParserTextException("Could not find public date in {}".format(url))
 
     try:
-        public_date = datetime.strptime(match.group(1), "%A, %B %d, %Y")
+        public_date = datetime.strptime(match.group(1), DATE_FORMAT)
     except ValueError:
         raise AdvisoryParserTextException(
             "Could not parse public date ({}) from {}".format(match.group(1), url)
@@ -46,8 +56,8 @@ def parse_chrome_advisory(url):
 
     # Find Chrome version, e.g. 46.0.2490.71
     try:
-        fixed_in = re.search(r"\d{2,3}\.\d\.\d{4}\.\d{2,3}", flaws_text).group(0)
-    except ValueError:
+        fixed_in = re.search(CHROME_VERSION_REGEX, flaws_text).group(0)
+    except (AttributeError, ValueError):
         raise AdvisoryParserTextException("Could not find fixed-in version in {}".format(url))
 
     # Filter out lines that contain CVEs
@@ -72,7 +82,7 @@ def parse_chrome_advisory(url):
         else:
             match = re.search(r"(Critical|High|Medium|Low)", metadata)
             if not match:
-                print("Could not find impact; skipping: {}".format(line))
+                logger.warning("Could not find impact; skipping: %s", line)
                 continue
             else:
                 impact = match.group(1)
@@ -110,7 +120,7 @@ def parse_chrome_advisory(url):
 
         description += "\n\nUpstream bug(s):\n"
         for bug in bug_ids:
-            description += "\nhttps://code.google.com/p/chromium/issues/detail?id=" + bug
+            description += "\n" + CHROMIUM_ISSUE_BASE_URL + bug
 
         com_url = (
             url if "blogspot.com" in url else re.sub(r"blogspot\.[^/]*/", "blogspot.com/", url)

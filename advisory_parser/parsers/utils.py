@@ -3,6 +3,8 @@
 # License: LGPLv3+
 
 import re
+import gzip
+import logging
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen, Request
 
@@ -10,27 +12,35 @@ from bs4 import BeautifulSoup
 
 from advisory_parser.exceptions import AdvisoryParserGetContentException
 
+logger = logging.getLogger(__name__)
+
 CVE_REGEX = re.compile(r"CVE-\d{4}-\d{4,}")
 
 
 def get_request(url):
-    user_agent = (
-        "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"
-    )
-    headers = {"User-Agent": user_agent}
+    headers = {
+        "User-Agent": "Advisory-Parser/1.0",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Encoding": "gzip, deflate",
+    }
     request = Request(url, None, headers)
     try:
-        res = urlopen(request)
+        res = urlopen(request, timeout=30)
+        data = res.read()
+
+        # Handle gzip-compressed responses
+        if res.headers.get("Content-Encoding") == "gzip":
+            data = gzip.decompress(data)
     except HTTPError as e:
-        error_msg = "Failed to GET with status code: {}".format(e.code)
+        error_msg = "Failed to GET {} with status code: {}".format(url, e.code)
         raise AdvisoryParserGetContentException(error_msg)
     except URLError as e:
-        error_msg = "Failed to establish connection: {}".format(e.reason)
+        error_msg = "Failed to establish connection to {}: {}".format(url, e.reason)
         raise AdvisoryParserGetContentException(error_msg)
     except ValueError:
-        raise AdvisoryParserGetContentException("Invalid URL specified.")
+        raise AdvisoryParserGetContentException("Invalid URL specified: {}".format(url))
     else:
-        return res.read()
+        return data
 
 
 def get_text_from_url(url):
