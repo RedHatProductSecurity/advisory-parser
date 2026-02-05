@@ -19,6 +19,6 @@ jobs:
         tox_env: ${{ matrix.tox_env }}
     strategy:
       matrix:
-        tox_env: [black, py36, py37, py38, py39, py310, py311, py312]
+        tox_env: [black, py313]
 
     runs-on: ubuntu-latest
