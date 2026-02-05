@@ -4,5 +4,4 @@
 
 from .parser import Parser
 
-
 __version__ = "1.13"
