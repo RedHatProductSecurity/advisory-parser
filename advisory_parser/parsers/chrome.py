@@ -34,7 +34,10 @@ def parse_chrome_advisory(url):
 
     # Workaround for advisories that do not use <div>s for each CVE entry. E.g.:
     # https://chromereleases.googleblog.com/2018/04/stable-channel-update-for-desktop.html
-    advisory_text = re.sub(r"(.)\[", r"\1\n[", advisory_text)
+    advisory_text = re.sub(r"(.)\[\$", r"\1\n[$", advisory_text)
+    # 2026+ posts concatenate CVE entries on one line using [TBD][bugid],
+    # [N/A][bugid], or [$reward][bugid]. Split them into separate lines.
+    advisory_text = re.sub(r"(?<=\S)(\[(?:TBD|N/A|\$\d+)\]\[)", r"\n\1", advisory_text)
 
     if SECURITY_FIXES_HEADER not in advisory_text:
         raise AdvisoryParserTextException("No security fixes found in {}".format(url))
