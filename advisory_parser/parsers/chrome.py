@@ -119,8 +119,6 @@ def parse_chrome_advisory(url):
                 summary
             )
 
-        summary = "chromium-browser: " + summary
-
         description += "\n\nUpstream bug(s):\n"
         for bug in bug_ids:
             description += "\n" + CHROMIUM_ISSUE_BASE_URL + bug
