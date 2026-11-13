@@ -28,7 +28,7 @@ def test_parser(get_text_from_url):
     assert vars(flaws[0]) == {
         "summary": "Sandbox Escape in IndexedDB",
         "cvss3": "8.8/CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
-        "description": "A sandbox escape flaw was found in the IndexedDB component of the Chromium browser.\n\nUpstream bug(s):\n\nhttps://code.google.com/p/chromium/issues/detail?id=725032",
+        "description": "A sandbox escape flaw was found in the IndexedDB component of the Chromium browser.\n\nUpstream bug(s):\n\nhttps://issues.chromium.org/issues/725032",
         "from_url": "https://chromereleases.googleblog.com/2017/06/stable-channel-update-for-desktop_15.html",
         "fixed_in": {"chromium-browser": ["59.0.3071.104"]},
         "cvss2": None,
@@ -40,7 +40,7 @@ def test_parser(get_text_from_url):
     assert vars(flaws[1]) == {
         "summary": "Out of bounds read in V8",
         "cvss3": "8.8/CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
-        "description": "An out of bounds read flaw was found in the V8 component of the Chromium browser.\n\nUpstream bug(s):\n\nhttps://code.google.com/p/chromium/issues/detail?id=729991",
+        "description": "An out of bounds read flaw was found in the V8 component of the Chromium browser.\n\nUpstream bug(s):\n\nhttps://issues.chromium.org/issues/729991",
         "from_url": "https://chromereleases.googleblog.com/2017/06/stable-channel-update-for-desktop_15.html",
         "fixed_in": {"chromium-browser": ["59.0.3071.104"]},
         "cvss2": None,
@@ -52,7 +52,7 @@ def test_parser(get_text_from_url):
     assert vars(flaws[2]) == {
         "summary": "Domain spoofing in Omnibox",
         "cvss3": "6.5/CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
-        "description": "A domain spoofing flaw was found in the Omnibox component of the Chromium browser.\n\nUpstream bug(s):\n\nhttps://code.google.com/p/chromium/issues/detail?id=714196",
+        "description": "A domain spoofing flaw was found in the Omnibox component of the Chromium browser.\n\nUpstream bug(s):\n\nhttps://issues.chromium.org/issues/714196",
         "from_url": "https://chromereleases.googleblog.com/2017/06/stable-channel-update-for-desktop_15.html",
         "fixed_in": {"chromium-browser": ["59.0.3071.104"]},
         "cvss2": None,

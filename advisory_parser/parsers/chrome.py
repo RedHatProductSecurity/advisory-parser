@@ -26,7 +26,7 @@ SECURITY_FIXES_HEADER = "Security Fixes"
 LABELS_FOOTER = "Labels:\nStable updates"
 DATE_FORMAT = "%A, %B %d, %Y"
 CHROME_VERSION_REGEX = r"\d{2,3}\.\d\.\d{4}\.\d{2,3}"
-CHROMIUM_ISSUE_BASE_URL = "https://code.google.com/p/chromium/issues/detail?id="
+CHROMIUM_ISSUE_BASE_URL = "https://issues.chromium.org/issues/"
 
 
 def parse_chrome_advisory(url):
@@ -94,7 +94,10 @@ def parse_chrome_advisory(url):
             impact = impact.replace("high", "important")
             impact = impact.replace("medium", "moderate")
 
-        bug_ids = re.findall(r"\d{6,}", metadata)
+        # Extract all text within brackets to find 6+ digit Chromium bug
+        # IDs, using a negative lookbehind to exclude bounty amounts.
+        bug_ids = re.findall(r"(?<!\$)\b\d{6,}\b", " ".join(re.findall(r"\[(.*?)\]", metadata)))
+
         cves = CVE_REGEX.findall(metadata)
         if not bug_ids and not cves:
             warnings.append("Could not find CVEs or bugs; skipping: {}".format(line))
