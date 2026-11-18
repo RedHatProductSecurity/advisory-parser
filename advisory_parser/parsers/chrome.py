@@ -15,10 +15,14 @@ logger = logging.getLogger(__name__)
 # Chromium does not publish CVSS scores with their CVEs so these values are
 # best-effort guesses based on impact.
 CVSS3_MAP = {
-    "critical": "9.6/CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H",
-    "important": "8.8/CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
-    "moderate": "6.5/CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
-    "low": "4.3/CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:L",
+    # Score: 9.6
+    "critical": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H",
+    # Score: 8.8
+    "important": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+    # Score: 6.5
+    "moderate": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
+    # Score: 4.3
+    "low": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:L",
 }
 
 # Constants for Chrome advisory parsing
