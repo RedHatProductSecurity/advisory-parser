@@ -3,14 +3,11 @@
 # License: LGPLv3+
 
 import re
-import logging
 from datetime import datetime
 
 from advisory_parser.exceptions import AdvisoryParserTextException
 from advisory_parser.flaw import Flaw
 from .utils import get_text_from_url, CVE_REGEX
-
-logger = logging.getLogger(__name__)
 
 # Chromium does not publish CVSS scores with their CVEs so these values are
 # best-effort guesses based on impact.
@@ -89,7 +86,7 @@ def parse_chrome_advisory(url):
         else:
             match = re.search(r"(Critical|High|Medium|Low)", metadata)
             if not match:
-                logger.warning("Could not find impact; skipping: %s", line)
+                warnings.append("Could not find impact; skipping: {}".format(line))
                 continue
             else:
                 impact = match.group(1)
