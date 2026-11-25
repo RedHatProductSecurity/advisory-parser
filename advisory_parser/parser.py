@@ -29,7 +29,7 @@ class Parser:
         elif "flash-player" in url:
             return parse_flash_advisory(url)
 
-        elif "oracle.com" in url:
+        elif "www.oracle.com" == url:
             return parse_mysql_advisory(url)
 
         elif "jenkins.io" in url:
