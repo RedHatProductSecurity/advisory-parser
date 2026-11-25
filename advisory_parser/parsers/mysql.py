@@ -15,6 +15,24 @@ from .utils import get_request, get_text_from_url, CVE_REGEX
 MARIADB_VULN_PAGE = "https://mariadb.com/kb/en/security/"
 VERSION_REGEX = re.compile(r"(\d\d?\.\d\.\d\d?)")
 
+# Cap on the MariaDB page text we are willing to scan. The real page is
+# roughly 32 KB of text, so this leaves ample room for growth while
+# bounding the amount of text a hostile page can feed the parser.
+MAX_PAGE_TEXT_CHARS = 1024 * 1024
+
+# Splits a description cell into the flaw description and its CVSS text.
+# The whitespace class excludes newlines so a match attempt cannot consume
+# the newline that anchors it; a greedy \s* re-scans a whitespace run once
+# per newline, which makes re.split quadratic on malformed input.
+CVSS_SPLIT_REGEX = re.compile(r"\n[^\S\n]*CVSS v?3\.[0-9] (?=Base Score)")
+
+# Extracts the base score and vector from CVSS text like
+# "CVSS 3.0 Base Score 5.9 (Confidentiality impacts). CVSS Vector: (CVSS:3.0/...)".
+# Both quantifiers are bounded (the real gap between the score and "Vector:"
+# is under 70 characters and vectors are ~45 characters) so malformed CVSS
+# text cannot trigger quadratic backtracking.
+CVSS_SCORE_REGEX = re.compile(r"Base Score\s*(\d?\d\.\d).{0,256}Vector:\s*\(([^)]{1,256})\)")
+
 month_to_num = {
     "jan": 1,
     "feb": 2,
@@ -86,19 +104,25 @@ def create_mariadb_cve_map():
     # doesn't define </li> ending tags for list elements. The HTML would
     # have to be parsed with a more lenient parser (html5lib), which is an
     # extra dependency.
-    page_text = get_text_from_url(MARIADB_VULN_PAGE)
+    page_text = get_text_from_url(MARIADB_VULN_PAGE)[:MAX_PAGE_TEXT_CHARS]
 
-    match = re.match(
-        r".+Full List of CVEs fixed in MariaDB\n(.+)\s*CVEs without specific version numbers.*",
-        page_text,
-        re.DOTALL,
-    )
+    # Locate the CVE list with a plain string scan instead of a greedy
+    # regular expression: with re.DOTALL, "(.+)" followed by the end marker
+    # scans quadratically when the end marker is missing. Both markers also
+    # appear in the page's table of contents, so like the greedy match, take
+    # the last occurrence of each marker.
+    start_marker = "Full List of CVEs fixed in MariaDB\n"
+    end_marker = "CVEs without specific version numbers"
 
-    if not match:
-        raise AdvisoryParserTextException("Could not parse date from CPU URL.")
+    end = page_text.rfind(end_marker)
+    start = page_text.rfind(start_marker, 0, end) if end != -1 else -1
+    if start == -1 or end <= start + len(start_marker):
+        raise AdvisoryParserTextException(
+            "Could not parse the MariaDB CVE list from {}".format(MARIADB_VULN_PAGE)
+        )
 
     cve_map = {}
-    for cve_line in match.group(1).split("\n"):
+    for cve_line in page_text[start + len(start_marker) : end].split("\n"):
         cve = CVE_REGEX.search(cve_line)
         versions = VERSION_REGEX.findall(cve_line)
 
@@ -171,7 +195,7 @@ def parse_mysql_advisory(url):
         description = "\n".join(description)
 
         # Take the text part only, i.e. anything before the CVSS string
-        desc_cvss = re.split(r"\n\s*CVSS v?3\.[0-9] (?=Base Score)", description)
+        desc_cvss = CVSS_SPLIT_REGEX.split(description)
         if len(desc_cvss) != 2:
             warnings.append(
                 "ERROR: Could not identify CVSS score in {}; skipping:\n\n{}\n---".format(
@@ -199,7 +223,7 @@ def parse_mysql_advisory(url):
             continue
 
         # Filter out the lines that start with CVSS and find the score + vector
-        match = re.search(r"Base Score\s*(\d?\d\.\d).*Vector:\s*\(([^)]+)\)", cvss_text)
+        match = CVSS_SCORE_REGEX.search(cvss_text)
         if not match:
             cvss3 = None
             warnings.append("Could not parse CVSSv3 score from {} description".format(cve))
