@@ -24,7 +24,7 @@ def load_test_data(fname):
     return testing_text
 
 
-@patch("advisory_parser.parsers.jenkins.get_request")
+@patch("advisory_parser.parsers.utils.get_request")
 def test_parser(get_request):
     get_request.return_value = load_test_data("jenkins_2023-04-12.html")
     url = "https://www.jenkins.io/security/advisory/2023-04-12/"
@@ -113,7 +113,7 @@ def test_parser(get_request):
     assert "SECURITY-2851: Could not find a fixed version for spoonscript plugin" in warnings
 
 
-@patch("advisory_parser.parsers.jenkins.get_request")
+@patch("advisory_parser.parsers.utils.get_request")
 def test_extract_severity_to_cvss3_map(get_request):
     get_request.return_value = load_test_data("jenkins_2023-04-12.html")
     url = "https://www.jenkins.io/security/advisory/2023-04-12/"
@@ -179,7 +179,7 @@ def test_extract_severity_to_cvss3_map(get_request):
     }
 
 
-@patch("advisory_parser.parsers.jenkins.get_request")
+@patch("advisory_parser.parsers.utils.get_request")
 def test_extract_fixes(get_request):
     get_request.return_value = load_test_data("jenkins_2023-04-12.html")
     url = "https://www.jenkins.io/security/advisory/2023-04-12/"
@@ -190,7 +190,7 @@ def test_extract_fixes(get_request):
     }
 
 
-@patch("advisory_parser.parsers.jenkins.get_request")
+@patch("advisory_parser.parsers.utils.get_request")
 def test_extract_advisories(get_request):
     get_request.return_value = load_test_data("jenkins_2023-04-12.html")
     url = "https://www.jenkins.io/security/advisory/2023-04-12/"

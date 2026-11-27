@@ -61,3 +61,9 @@ Usage
     for flaw in flaws:
         print()
         pprint(vars(flaw))
+
+Development
+-----------
+
+See `RELEASING.md <https://github.com/RedHatProductSecurity/advisory-parser/blob/master/RELEASING.md>`_
+for instructions on tagging, building, and publishing a release to PyPI.
