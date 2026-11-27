@@ -97,6 +97,108 @@ def test_parser(create_mariadb_cve_map, get_request, input_file, url):
     }
 
 
+MYSQL_CPU_PAGE_UNPARSABLE_CVSS_FIRST = """<!DOCTYPE html>
+<html>
+<body>
+<h3 id="MSQL">Text Form of Risk Matrix for Oracle MySQL</h3>
+<table>
+    <thead>
+        <tr>
+            <th>CVE Identifier</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td><a id="CVE-2019-0001"></a>CVE-2019-0001</td>
+    <td><p>Vulnerability in the MySQL Server component of Oracle MySQL (subcomponent: InnoDB). Supported versions that are affected are 8.0.15 and prior. Easily exploitable vulnerability allows high privileged attacker with network access via multiple protocols to compromise MySQL Server.
+  </p>
+    <p> CVSS v3.0 Base Score 4.9 (Availability impacts). This entry intentionally omits the CVSS vector.</p></td>
+    </tr>
+    <tr>
+    <td><a id="CVE-2019-1111"></a>CVE-2019-1111</td>
+    <td><p>Vulnerability in the MySQL Server component of Oracle MySQL (subcomponent: InnoDB). Supported versions that are affected are 8.0.15 and prior. Easily exploitable vulnerability allows high privileged attacker with network access via multiple protocols to compromise MySQL Server.
+  </p>
+    <p> CVSS v3.0 Base Score 4.9 (Availability impacts). CVSS Vector: (CVSS:3.0/AV:N/AC:L/PR:H/UI:N/S:U/C:N/I:N/A:H). (legend) [Advisory]</p></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>"""
+
+
+@patch("advisory_parser.parsers.mysql.get_request")
+@patch("advisory_parser.parsers.mysql.create_mariadb_cve_map")
+def test_parser_skips_row_with_unparsable_cvss_score(create_mariadb_cve_map, get_request):
+    # The first MySQL Server row's CVSS text splits but has no "Vector: (...)",
+    # so CVSS_SCORE_REGEX fails. The row must be skipped with a warning instead
+    # of falling through to the impact calculation, which would raise an
+    # UnboundLocalError on the unassigned cvss3_score.
+    get_request.return_value = MYSQL_CPU_PAGE_UNPARSABLE_CVSS_FIRST
+    create_mariadb_cve_map.return_value = {}
+
+    flaws, warnings = parse_mysql_advisory("https://www.oracle.com/security-alerts/cpuoct2019.html")
+
+    assert len(flaws) == 1
+    assert flaws[0].cves == ["CVE-2019-1111"]
+    assert flaws[0].cvss3 == "4.9/CVSS:3.0/AV:N/AC:L/PR:H/UI:N/S:U/C:N/I:N/A:H"
+    assert flaws[0].impact == "moderate"
+
+    assert len(warnings) == 1
+    assert "Could not parse CVSSv3 score in CVE-2019-0001" in warnings[0]
+    assert "Base Score 4.9" in warnings[0]
+
+
+MYSQL_CPU_PAGE_UNPARSABLE_CVSS_SECOND = """<!DOCTYPE html>
+<html>
+<body>
+<h3 id="MSQL">Text Form of Risk Matrix for Oracle MySQL</h3>
+<table>
+    <thead>
+        <tr>
+            <th>CVE Identifier</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td><a id="CVE-2019-2222"></a>CVE-2019-2222</td>
+    <td><p>Vulnerability in the MySQL Server component of Oracle MySQL (subcomponent: Server: DDL). Supported versions that are affected are 5.7.25 and prior. Easily exploitable vulnerability allows unauthenticated attacker with network access via multiple protocols to compromise MySQL Server.
+  </p>
+    <p> CVSS v3.0 Base Score 7.5 (Confidentiality impacts). CVSS Vector: (CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N). (legend) [Advisory]</p></td>
+    </tr>
+    <tr>
+    <td><a id="CVE-2019-3333"></a>CVE-2019-3333</td>
+    <td><p>Vulnerability in the MySQL Server component of Oracle MySQL (subcomponent: InnoDB). Supported versions that are affected are 8.0.15 and prior. Easily exploitable vulnerability allows high privileged attacker with network access via multiple protocols to compromise MySQL Server.
+  </p>
+    <p> CVSS v3.0 Base Score 4.9 (Availability impacts). This entry intentionally omits the CVSS vector.</p></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>"""
+
+
+@patch("advisory_parser.parsers.mysql.get_request")
+@patch("advisory_parser.parsers.mysql.create_mariadb_cve_map")
+def test_parser_does_not_use_stale_cvss_score(create_mariadb_cve_map, get_request):
+    # A failed CVSS_SCORE_REGEX match must skip the row instead of reusing the
+    # previous row's cvss3_score, which would emit a flaw with a None cvss3
+    # and the stale impact.
+    get_request.return_value = MYSQL_CPU_PAGE_UNPARSABLE_CVSS_SECOND
+    create_mariadb_cve_map.return_value = {}
+
+    flaws, warnings = parse_mysql_advisory("https://www.oracle.com/security-alerts/cpuoct2019.html")
+
+    assert len(flaws) == 1
+    assert flaws[0].cves == ["CVE-2019-2222"]
+    assert flaws[0].cvss3 == "7.5/CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N"
+    assert flaws[0].impact == "important"
+
+    assert len(warnings) == 1
+    assert "Could not parse CVSSv3 score in CVE-2019-3333" in warnings[0]
+
+
 MARIADB_PAGE = (
     "Security Vulnerabilities Fixed in MariaDB\n"
     "Contents\n"

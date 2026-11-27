@@ -225,11 +225,15 @@ def parse_mysql_advisory(url):
         # Filter out the lines that start with CVSS and find the score + vector
         match = CVSS_SCORE_REGEX.search(cvss_text)
         if not match:
-            cvss3 = None
-            warnings.append("Could not parse CVSSv3 score from {} description".format(cve))
-        else:
-            cvss3_score = match.group(1)
-            cvss3 = cvss3_score + "/" + match.group(2)
+            warnings.append(
+                "ERROR: Could not parse CVSSv3 score in {}; skipping:\n\n{}\n---".format(
+                    cve, cvss_text
+                )
+            )
+            continue
+
+        cvss3_score = match.group(1)
+        cvss3 = cvss3_score + "/" + match.group(2)
 
         x = float(cvss3_score)
         if 0.0 < x < 4.0:
